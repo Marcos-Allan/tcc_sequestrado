@@ -1,5 +1,4 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
-import { useState } from 'react'
 import { Link } from "react-router-dom";
 
 //IMPORTAÇÃO DOS COMPONENTES
@@ -10,14 +9,10 @@ import Divider from "../../components/Divider";
 
 export default function SignIn() {
 
-    //UTILIZAÇÃO DO HOOK useState
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+    const emailValid = false
+    const passwordValid = undefined
     
-    const [emailValid, setEmailValid] = useState<boolean>(false)
-    const [passwordValid, setPasswordValid] = useState<boolean | undefined>(undefined)
-    
-    const [btnValid, setBtnValid] = useState<boolean>(false)
+    const btnValid = false
 
     return(
         <div className={`w-screen h-screen bg-my-white px-10 flex flex-col max-w-[500px] mx-auto`}>
