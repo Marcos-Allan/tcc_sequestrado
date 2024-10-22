@@ -4,7 +4,6 @@ import ProductCard from "../../components/ProductCard"
 import Footer from "../../components/Footer"
 import ModalCart from "../../components/ModalCart"
 import ModalUser from "../../components/ModalUser"
-import ModalNotify from "../../components/ModalNotify"
 import Carousel from "../../components/Carrosel"
 
 //IMPORTAÇÃO DAS IMAGENS
@@ -18,8 +17,12 @@ import agenda from '../../../public/Agenda 17x9,4cm.png'
 import azulejo from '../../../public/Azulejo 15x15cm.png'
 import almochaveiro from '../../../public/Almochaveiro 7x7cm.png'
 
+//IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
+import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
+import { storage } from '../../utils/firebase';
+
 //IMPORTAÃO DAS BIBLIOTECAS
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
@@ -28,6 +31,9 @@ import { GlobalContext } from "../../provider/context";
 export default function Principal() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
     const navigate = useNavigate()
+
+    //UTILIZAÇÃO DO HOOK useState
+    const [imgs, setImgs] = useState<string[]>()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { user, setProductSelected }:any = useContext(GlobalContext);
@@ -38,9 +44,37 @@ export default function Principal() {
         navigate(`/product/${name.toLowerCase()}`)
     }
 
+    //FUNÇÃO RESPONSÁVEL POR LISTAR OS AVATARES
+    const fetchImages = async () => {
+        //FAZ UMA REFERÊNCIA AO LOCAL DE AVATARES SALVOS NA NUVEM
+        const storageRef = ref(storage, '/images/products');
+        // const storageRef = ref(storage, '/images/icons-achievements');
+
+        try {
+            //PEGA AS IMAGENS DENTRO DA PASTA ESPECIFICADA
+            const result = await listAll(storageRef);
+
+            //PEGA A URL DOS AVATARES
+            const urlPromises = result.items.map((imageRef) => getDownloadURL(imageRef));
+            
+            //ESPERA TODOS OS AVATARES SEREM 
+            const urls = await Promise.all(urlPromises);
+            
+            console.log(urls)
+            
+            //SETA AS URLS DAS IMAGENS
+            setImgs(urls);
+        } catch (error) {
+            console.error('Erro ao listar imagens:', error);
+        }
+    };
+    
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         console.log(user.name)
+
+        //CHAMA A FUNÇÃO QUE LISTA A URL DAS IMAGENS DOS PRODUTOS
+        fetchImages()
     },[])
 
     return(
@@ -104,7 +138,6 @@ export default function Principal() {
             <Footer />
             <ModalCart />
             <ModalUser />
-            <ModalNotify />
         </div>
     )
 }

@@ -7,7 +7,7 @@ import present from '../../../public/logosemtexto.png'
 import presentText from '../../../public/TEXTO.png'
 
 //IMPORTAÇÃO DOS ICONES
-import { FaUser, FaCartPlus, FaBell } from "react-icons/fa"
+import { FaUser, FaCartPlus } from "react-icons/fa"
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -17,7 +17,7 @@ export default function Header() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openCart, setOpenCart, openPerfil, setOpenPerfil, openNotifys, setOpenNotifys }:any = useContext(GlobalContext);
+    const { openCart, setOpenCart, openPerfil, setOpenPerfil }:any = useContext(GlobalContext);
 
     return(
         <div className={`w-full bg-my-white flex items-center justify-between px-3 py-2`}>
@@ -46,11 +46,6 @@ export default function Header() {
                 <FaCartPlus
                     onClick={() => {
                         setOpenCart(!openCart)
-                    }}
-                />
-                <FaBell
-                    onClick={() => {
-                        setOpenNotifys(!openNotifys)
                     }}
                 />
             </div>

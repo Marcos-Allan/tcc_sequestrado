@@ -9,6 +9,12 @@ import {
 //IMPORTAÇÃO DO ESTILO GERAL
 import './index.css'
 
+//IMPORTAÇÃO DO COMPONENTE DE MODAL
+import { ToastContainer } from 'react-toastify';
+
+//IMPORTAÇÃO DO ESTILO DA BIBLIOTECA DE MODAL
+import 'react-toastify/dist/ReactToastify.css';
+
 //IMPORTAÇÃO DAS PÁGINAS
 import SignIn from './screens/SignIn'
 import SignUp from './screens/SignUp'
@@ -52,6 +58,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GlobalProvider>
       <RouterProvider router={router} />
+      <ToastContainer />
     </GlobalProvider>
   </StrictMode>,
 )

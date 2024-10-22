@@ -1,5 +1,6 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext } from 'react'
+import { Link } from 'react-router-dom';
 
 //IMPORTAÇÃO DOS ICONES
 import { FaUser } from "react-icons/fa"
@@ -23,7 +24,7 @@ export default function ModalUser() {
                     }}
                 >
                     <div
-                        className={`bg-[#ffffff] w-[250px] h-[250px] absolute right-[78px] top-[36px] rounded-[12px] z-[60]`}
+                        className={`bg-[#ffffff] w-[270px] h-[250px] absolute right-[42px] top-[36px] rounded-[12px] z-[60]`}
                         onClick={(e) => {
                             //EVITA A PROPAGAÇÃO DOS EVENTOS DE CLIQUE DOS BOTÕES
                             e.stopPropagation()
@@ -35,6 +36,7 @@ export default function ModalUser() {
                             }}
                             className={`absolute top-0 right-0 text-[28px] text-my-secondary mt-[13px] mr-[6px]`}
                         />
+                        <Link to="/perfil">perfil</Link>
                     </div>
                 </div>
             )}

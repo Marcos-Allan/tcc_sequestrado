@@ -1,16 +1,15 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 //IMPORTAÇÃO DOS COMPONENTES
 import Header from "../../components/Header"
 import Footer from "../../components/Footer";
 import ModalUser from '../../components/ModalUser';
 import ModalCart from '../../components/ModalCart';
-import ModalNotify from '../../components/ModalNotify';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
-import { useNavigate } from 'react-router-dom';
 
 export default function Product() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
@@ -66,7 +65,6 @@ export default function Product() {
             <Footer />
             <ModalUser />
             <ModalCart />
-            <ModalNotify />
         </div>        
     )
 }

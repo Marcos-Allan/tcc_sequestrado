@@ -7,6 +7,8 @@ interface Props {
     placeholder: String,
     validate: Boolean | undefined,
     type?: String,
+    value: any,
+    onChange: (e:React.ChangeEvent<HTMLInputElement>) => void
 }
 
 //IMPORTAÇÃO DOS ICONES
@@ -24,11 +26,13 @@ export default function Input(props: Props) {
 
     return(
         <div className='w-full'>
-            <label className={`font-bold
-            ${props.validate == true && 'text-my-primary'}
-            ${props.validate == false && 'text-my-red'}
-            ${props.validate == undefined && 'text-my-secondary'}
-            `}>{props.label}</label>
+            <label
+                className={`font-bold
+                    ${props.validate == true && 'text-my-primary'}
+                    ${props.validate == false && 'text-my-red'}
+                    ${props.validate == undefined && 'text-my-secondary'}
+                `}
+            >{props.label}</label>
             <div className='relative flex items-center justify-center'>
                 <input
                     type={props.type ? `${visible == true ? 'text' : 'password'}` : 'text'}
@@ -52,6 +56,8 @@ export default function Input(props: Props) {
                     name=""
                     id=""
                     placeholder={`${props.placeholder}`}
+                    value={props.value}
+                    onChange={props.onChange}
                 />
                 {props.type && (
                     <div
@@ -59,9 +65,19 @@ export default function Input(props: Props) {
                         className={`absolute right-0 mr-4 text-[24px] text-my-gray`}
                     >
                         {visible == true ? (
-                            <FaEye />
+                            <FaEye
+                                className={`
+                                    ${props.validate == true && 'text-my-primary'}
+                                    ${props.validate == false && 'text-my-red'}
+                                `}
+                            />
                         ):(
-                            <FaEyeSlash />
+                            <FaEyeSlash 
+                                className={`
+                                    ${props.validate == true && 'text-my-primary'}
+                                    ${props.validate == false && 'text-my-red'}
+                                `}
+                            />
                         )}
                     </div>
                 )}
@@ -74,7 +90,7 @@ export default function Input(props: Props) {
                     </div>
                 )}
                 
-                {!props.type && props.validate !== true && (
+                {!props.type && props.validate == false && (
                     <div
                         className={`absolute right-0 mr-4 text-[24px] text-my-red`}
                     >
