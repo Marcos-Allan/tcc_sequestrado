@@ -18,11 +18,11 @@ import azulejo from '../../../public/Azulejo 15x15cm.png'
 import almochaveiro from '../../../public/Almochaveiro 7x7cm.png'
 
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
+import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { storage } from '../../utils/firebase';
 
 //IMPORTAÃO DAS BIBLIOTECAS
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
@@ -33,7 +33,7 @@ export default function Principal() {
     const navigate = useNavigate()
 
     //UTILIZAÇÃO DO HOOK useState
-    const [imgs, setImgs] = useState<string[]>()
+    // const [imgs, setImgs] = useState<string[]>()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { user, setProductSelected }:any = useContext(GlobalContext);
@@ -55,7 +55,7 @@ export default function Principal() {
             const result = await listAll(storageRef);
 
             //PEGA A URL DOS AVATARES
-            const urlPromises = result.items.map((imageRef) => getDownloadURL(imageRef));
+            const urlPromises = result.items.map((imageRef:any) => getDownloadURL(imageRef));
             
             //ESPERA TODOS OS AVATARES SEREM 
             const urls = await Promise.all(urlPromises);
@@ -63,7 +63,7 @@ export default function Principal() {
             console.log(urls)
             
             //SETA AS URLS DAS IMAGENS
-            setImgs(urls);
+            // setImgs(urls);
         } catch (error) {
             console.error('Erro ao listar imagens:', error);
         }
