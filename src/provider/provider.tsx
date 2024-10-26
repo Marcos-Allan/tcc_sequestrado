@@ -17,14 +17,17 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
             history: userLS !== null ? JSON.parse(userLS).history : [
                 { data: '9/10/2024', name: 'Caneca Porcelana', img: 'undefined', price: 19.90, quantity: 2, estampa: '', },
                 { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', }
-            ]
+            ],
+            logged: userLS !== null ? JSON.parse(userLS).logged : false,
         }
     );
     const [openCart, setOpenCart] = useState<boolean>(false)
     const [openPerfil, setOpenPerfil] = useState<boolean>(false)
     const [productSelected, setProductSelected] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined' })
+    const [productSelectedEdit, setProductSelectedEdit] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined' })
     const [cart, setCart] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [logoutModal, setLogoutModal] = useState<boolean>(false);
 
     //FUNÇÃO RESPONSÁVEL POR ADICIONAR NOVO ITEM NO CARRINHO
     function addToCart(newItem: any) {
@@ -53,16 +56,28 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     //FUNÇÃO RESPONSÁVEL POR ATUALIZAR OS DADOS DO USUÁRIO
-    function toggleUser(id:any, name:string, email:string, history:any) {
+    function toggleUser(id:any, name:string, email:string, history:any, logged:boolean) {
         //SALVA OS DADOS DO USUÁRIO NO localStorage
-        localStorage.setItem('userPU', JSON.stringify({ id: id, name: name, email: email, history: history }))
+        localStorage.setItem('userPU', JSON.stringify({ id: id, name: name, email: email, history: history, logged: logged }))
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
-        setUser({ id: id, name: name, email: email, history: history })
+        setUser({ id: id, name: name, email: email, history: history, logged: logged })
+    }
+
+    //FUNÇÃO RESPONSÁVEL POR COLOCAR O MODAL NA TELA
+    function toggleLogoutUser() {
+        //SALVA OS DADOS DO USUÁRIO NO localStorage
+        localStorage.removeItem('userPU')
+        
+        //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
+        setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", history: [
+            { data: '9/10/2024', name: 'Caneca Porcelana', img: 'undefined', price: 19.90, quantity: 2, estampa: '', },
+            { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', }
+        ],  })
     }
 
     return (
-        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, addToCart, loading, toggleLoading, toggleUser } as any}>
+        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit } as any}>
             {children}
         </GlobalContext.Provider>
     );

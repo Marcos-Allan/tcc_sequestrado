@@ -1,5 +1,6 @@
 //IMPORTAÇÃO DOS ICONES
-import { FaFacebook, FaInstagram, FaXbox } from "react-icons/fa"
+import { FaFacebook, FaInstagram } from "react-icons/fa"
+import { MdEmail } from "react-icons/md"
 
 //IMPORTAÇÃO DAS IMAGENS
 import image from '../../../public/Logo texto com fundo.png'
@@ -12,9 +13,9 @@ export default function Footer() {
                 <p className={`mb-2`}>Rio Acima, Jundiaí - State of São Paulo, 13215-841</p>
                 <h2 className={`text-[20px] font-bold mb-3`}>Contatos</h2>
                 <div className={`flex gap-3 items-center justify-center text-[34px] mb-3`}>
-                    <FaFacebook />
-                    <FaInstagram />
-                    <FaXbox />
+                    <FaFacebook className={`cursor-pointer`} />
+                    <FaInstagram className={`cursor-pointer`} />
+                    <MdEmail className={`cursor-pointer`} />
                 </div>
                 <p className="mb-3">Está com duvidas?</p>
                 <p>Clique <a className={`text-my-primary underline font-bold`} href="#">aqui</a> e tentaremos te ajudar!</p>

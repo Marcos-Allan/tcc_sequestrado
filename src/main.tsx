@@ -22,6 +22,7 @@ import Principal from './screens/Principal'
 import Perfil from './screens/Perfil'
 import Product from './screens/Product'
 import CustomProduct from './screens/CustomProduct'
+import EditProductCart from './screens/EditProductCart';
 
 //IMPORTAÇÃP DO PROVEDOR DE ESTADOS GLOBAIS
 import { GlobalProvider } from './provider/provider';
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: "custom/:product",
     element: <CustomProduct />,
+  },
+  {
+    path: "cart/edit/:product",
+    element: <EditProductCart />,
   },
 ]);
 

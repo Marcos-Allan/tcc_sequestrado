@@ -54,6 +54,7 @@ export default function ModalCart() {
                                 </div>
                             </div>
                         ))}
+                        <div className={`bg-my-primary py-[6px] absolute bottom-0 mx-auto mb-1 w-[80%] text-center text-my-white rounded-[6px]`}>Finalizar pedido</div>
                     </div>
                 </div>
             )}

@@ -10,6 +10,7 @@ import ModalUser from '../../components/ModalUser';
 import ModalCart from '../../components/ModalCart';
 import ChoiceSizeCard from '../../components/ChoiceSizeCard';
 import ChoiceQuantityCard from '../../components/ChoiceQuantityCard';
+import ModalLogout from '../../components/ModalLogout';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -86,7 +87,7 @@ export default function CustomProduct() {
                 //RESOLVE A PROMEISSE PASSANDO A IMAGEM COMO PARÂMETRO
                 resolve(img);
             } else {
-                const storageRef = ref(storage, `images/estampas/${file.name}`);
+                const storageRef = ref(storage, `images/estampas/${String(Math.floor(Math.random() * 99999999999999))}`);
                 const uploadTask = uploadBytesResumable(storageRef, file);
 
                 uploadTask.on(
@@ -138,7 +139,7 @@ export default function CustomProduct() {
                                     console.log(response.data.historico_pedido)
 
                                     //ATUALIZA OS DADOS DO USUÁRIO NO FRONTEND
-                                    toggleUser(user.id, user.name, user.email, response.data.historico_pedido)
+                                    toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
                                 })
                                 .catch(function (error) {
                                     console.log('erro: ', error)
@@ -342,7 +343,7 @@ export default function CustomProduct() {
                     </div>
                 </div>
             )}
-
+            <ModalLogout />
         </div>
     )
 }

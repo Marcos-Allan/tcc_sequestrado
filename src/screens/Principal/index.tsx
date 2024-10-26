@@ -5,6 +5,7 @@ import Footer from "../../components/Footer"
 import ModalCart from "../../components/ModalCart"
 import ModalUser from "../../components/ModalUser"
 import Carousel from "../../components/Carrosel"
+import ModalLogout from "../../components/ModalLogout"
 
 //IMPORTAÇÃO DAS IMAGENS
 import img from '../../../public/carrossell1.jpg'
@@ -32,9 +33,6 @@ export default function Principal() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
     const navigate = useNavigate()
 
-    //UTILIZAÇÃO DO HOOK useState
-    // const [imgs, setImgs] = useState<string[]>()
-
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { user, setProductSelected }:any = useContext(GlobalContext);
 
@@ -60,10 +58,8 @@ export default function Principal() {
             //ESPERA TODOS OS AVATARES SEREM 
             const urls = await Promise.all(urlPromises);
             
+            //ESCREVE NO CONSOLE AS URLS DAS IMAGENS
             console.log(urls)
-            
-            //SETA AS URLS DAS IMAGENS
-            // setImgs(urls);
         } catch (error) {
             console.error('Erro ao listar imagens:', error);
         }
@@ -138,6 +134,7 @@ export default function Principal() {
             <Footer />
             <ModalCart />
             <ModalUser />
+            <ModalLogout />
         </div>
     )
 }

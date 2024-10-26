@@ -1,6 +1,6 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext } from 'react'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DOS ICONES
 import { FaUser } from "react-icons/fa"
@@ -9,9 +9,11 @@ import { FaUser } from "react-icons/fa"
 import { GlobalContext } from "../../provider/context";
 
 export default function ModalUser() {
-
+    //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
+    const navigate = useNavigate()
+    
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openPerfil, setOpenPerfil }:any = useContext(GlobalContext);
+    const { openPerfil, setOpenPerfil, setLogoutModal, user }:any = useContext(GlobalContext);
 
     return(
         <>
@@ -24,7 +26,7 @@ export default function ModalUser() {
                     }}
                 >
                     <div
-                        className={`bg-[#ffffff] w-[270px] h-[250px] absolute right-[42px] top-[36px] rounded-[12px] z-[60]`}
+                        className={`bg-[#ffffff] w-[270px] h-[250px] absolute right-[42px] top-[36px] rounded-[12px] z-[6] p-2 pt-10`}
                         onClick={(e) => {
                             //EVITA A PROPAGAÇÃO DOS EVENTOS DE CLIQUE DOS BOTÕES
                             e.stopPropagation()
@@ -36,7 +38,20 @@ export default function ModalUser() {
                             }}
                             className={`absolute top-0 right-0 text-[28px] text-my-secondary mt-[13px] mr-[6px]`}
                         />
-                        <Link to="/perfil">perfil</Link>
+                        <p onClick={() => {
+                            navigate('/perfil')
+                            setOpenPerfil(false)
+                        }}
+                        className={`font-bold capitalize text-my-secondary underline`}>perfil</p>
+                        {user.logged == true && (
+                            <p
+                                className={`font-bold capitalize text-my-secondary underline`}
+                                onClick={() => {
+                                    setOpenPerfil(false)
+                                    setLogoutModal(true)
+                                }}
+                            >Logout</p>
+                        )}
                     </div>
                 </div>
             )}

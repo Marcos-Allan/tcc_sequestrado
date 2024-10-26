@@ -11,6 +11,7 @@ import GoogleLogin from "../../components/GoogleLogin";
 import Button from "../../components/Button";
 import Divider from "../../components/Divider";
 import LoadingPage from '../../components/LoadingPage';
+import Header from '../../components/Header';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -60,7 +61,7 @@ export default function SignUp() {
                 notifySucess(`Seja muito bem vindo ${response.data.name}`)
 
                 //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
-                toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido)
+                toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, true)
                 
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/principal')
@@ -145,6 +146,7 @@ export default function SignUp() {
 
     return(
         <div className={`w-screen h-screen bg-my-white px-10 flex flex-col max-w-[500px] mx-auto`}>
+            <Header />
             <h1 className={`mt-5 text-[28px] text-my-secondary font-inter font-bold mb-2`}>Crie sua conta</h1>
             <p className={`font-inter text-my-gray font-bold text-[16px] mb-6`}>Vamos criar sua conta</p>
 

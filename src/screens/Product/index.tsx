@@ -7,6 +7,7 @@ import Header from "../../components/Header"
 import Footer from "../../components/Footer";
 import ModalUser from '../../components/ModalUser';
 import ModalCart from '../../components/ModalCart';
+import ModalLogout from '../../components/ModalLogout';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -65,6 +66,7 @@ export default function Product() {
             <Footer />
             <ModalUser />
             <ModalCart />
+            <ModalLogout />
         </div>        
     )
 }
