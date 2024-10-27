@@ -124,7 +124,7 @@ export default function CustomProduct() {
                                     estampa: url
                                 })
 
-                                axios.put('http://localhost:3000/add-historico', {
+                                axios.put('https://back-tcc-murilo.onrender.com/add-historico', {
                                     userId: user.id,
                                     pedido: {
                                         name: productSelected.name,

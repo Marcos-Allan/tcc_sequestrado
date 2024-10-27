@@ -22,7 +22,7 @@ export default function GoogleLogin() {
 
     //FUNÇÃO RESPONSÁVEL POR FAZER LOGIN
     function signIn(email:string, name:string) {
-        axios.post('http://localhost:3000/register-google', {
+        axios.post('https://back-tcc-murilo.onrender.com/register-google', {
             email: email,
             name: name,
         })

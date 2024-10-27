@@ -44,7 +44,7 @@ export default function SignUp() {
         toggleLoading(true)
 
         // axios.post(`https://tcc2-backend3.onrender.com/register`, {
-        axios.post(`http://localhost:3000/register`, {
+        axios.post(`https://back-tcc-murilo.onrender.com/register`, {
             name: name,
             email: email,
             password: password,

@@ -42,7 +42,7 @@ export default function SignIn() {
         toggleLoading(true)
 
         // axios.get(`https://tcc2-backend3.onrender.com/login/${email}`)
-        axios.post(`http://localhost:3000/login`, {
+        axios.post(`https://back-tcc-murilo.onrender.com/login`, {
             email: email,
             password: password,
         })
