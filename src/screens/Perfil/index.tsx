@@ -9,9 +9,6 @@ import ModalCart from '../../components/ModalCart';
 import ModalUser from '../../components/ModalUser';
 import ModalLogout from '../../components/ModalLogout';
 
-//IMPORTAÇÃO DOS ICONES
-import { CiEdit } from 'react-icons/ci';
-
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
 
@@ -20,7 +17,7 @@ export default function Perfil() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { user, setProductSelectedEdit }:any = useContext(GlobalContext);
+    const { user }:any = useContext(GlobalContext);
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -46,25 +43,6 @@ export default function Perfil() {
                             <p className={`font-bold text-[18px] text-my-secondary`}>{compra.name}</p>
                             <p className={`font-bold text-[18px] text-my-primary`}>R$ {Number(Number(String(compra.price).replace(',', '.')) * compra.quantity).toFixed(2)} {compra.quantity}/un
                             </p>
-                        </div>
-                        <div
-                            onClick={() => {
-                                setProductSelectedEdit({
-                                    id: compra.id,
-                                    image: compra.image,
-                                    name: compra.name,
-                                    print: compra.estampa,
-                                    size: compra.size ? compra.size : 'g' ,
-                                    material: compra.material ? compra.material : 'poliester' ,
-                                    quantity: compra.quantity,
-                                    price: compra.price,
-                                })
-
-                                navigate(`/cart/edit/${compra.name}`)
-                            }}
-                            className={`bg-my-secondary w-10 h-10 flex items-center justify-center absolute top-[-20px] right-[-20px] rounded-[50%]`}
-                        >
-                            <CiEdit className={`text-[24px] text-my-white`} />
                         </div>
                     </div>
                 ))}

@@ -42,8 +42,8 @@ export default function Product() {
     }
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR O PRODUTO SELECIONADO
-    function selectProduct(image:string, name:string, price:string, materials:any) {
-        setProductSelected({ image: image, name:name, price:price, materials:materials })
+    function selectProduct(image:string, name:string, price:string, materials:any, material:string) {
+        setProductSelected({ image: image, name:name, price:price, materials:materials, material:material })
         navigate(`/custom/${productSelected.name}`)
     }
 
@@ -107,7 +107,13 @@ export default function Product() {
             )}
             <button
                 onClick={() => {
-                    selectProduct(productSelected.img, 'Caneca', `${String(Number(products[0].prices[productID]))}`, {materiais: products[0].type, colors: products[0].colors[productID]})
+                    selectProduct(
+                        productSelected.image,
+                        'Caneca',
+                        `${String(Number(products[0].prices[productID]))}`,
+                        {materiais: products[0].type, colors: products[0].colors[productID]},
+                        products[0].type[productID]
+                        )
                 }}
                 className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold`}
             >

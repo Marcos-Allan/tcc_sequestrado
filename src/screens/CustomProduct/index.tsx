@@ -31,7 +31,7 @@ export default function CustomProduct() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelected, addToCart, user, toggleUser }:any = useContext(GlobalContext);
+    const { productSelected, addToCart, user }:any = useContext(GlobalContext);
 
     const [size, setSize] = useState<string | undefined>(undefined)
     const [color, setColor] = useState<string | undefined>(undefined)
@@ -41,9 +41,28 @@ export default function CustomProduct() {
     const [modalQuantity, setModalQuantity] = useState<boolean>(false)
     const [btnActive, setBtnActive] = useState<boolean>(false)
 
+    const [products, setProducts] = useState<any>()
+    const [productID, setProductID] = useState<number>(1)
+
     //UTILIZA O HOOK useState
     const [img, setImg] = useState<string>('')
     const [imgURL, setImgURL] = useState<string | undefined>(undefined)
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
+    function getProducts() {
+        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        .then(function (response) {
+            
+            setProducts(response.data)
+            
+            console.log(response.data[0].colors[productID])
+            console.log(response.data[0].type[productID]) //type
+            console.log(response.data[0].prices[productID]) //price
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -59,7 +78,14 @@ export default function CustomProduct() {
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
-        console.log(productSelected.materials[1])
+        //CHAMA A FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
+        getProducts()
+    },[])
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        console.log(productSelected.material)
+        setMaterial(productSelected.material)
         //VERIFICA SE O PRODUTO FOI SELECIONADO
         if(productSelected.name == "undefined") {
             navigate('/principal')
@@ -138,9 +164,9 @@ export default function CustomProduct() {
                                 //ADICIONA ITEM AO CARRINHO
                                 addToCart({
                                     id: id,
-                                    image: productSelected.image,
+                                    image: products[0].img[productID],
                                     name: productSelected.name,
-                                    price: productSelected.price,
+                                    price: products[0].prices[productID],
                                     quantity: quantity,
                                     estampa: url,
                                     size: size,
@@ -149,12 +175,13 @@ export default function CustomProduct() {
                                 })
 
                                 //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
-                                axios.put('https://back-tcc-murilo.onrender.com/add-historico', {
+                                // axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
+                                axios.put('http://localhost:3000/add-carrinho', {
                                     userId: user.id,
-                                    pedido: {
+                                    produto: {
                                         id: id,
+                                        image: products[0].img[productID],
                                         name: productSelected.name,
-                                        image: productSelected.image,
                                         price: productSelected.price,
                                         quantity: quantity,
                                         estampa: url,
@@ -165,10 +192,10 @@ export default function CustomProduct() {
                                 })
                                 .then(function (response) {
                                     //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
-                                    console.log(response.data.historico_pedido)
+                                    console.log(response.data)
 
                                     //ATUALIZA OS DADOS DO USUÁRIO NO FRONTEND
-                                    toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
+                                    // toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
                                 })
                                 .catch(function (error) {
                                     console.log('erro: ', error)
@@ -255,10 +282,11 @@ export default function CustomProduct() {
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-between mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>material</h1>
-                    {productSelected.materials.materiais.map((materialName:string) => (
+                    {productSelected.materials.materiais.map((materialName:string, i:number) => (
                         <button
                             onClick={() => {
                                 setMaterial(String(materialName))
+                                setProductID(i)
                             }}
                             className={`w-[47.5%] flex-grow-[1] mb-2 bg-my-gray flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] py-3 border-[1px] ${material == String(materialName) ? 'border-my-primary' : 'border-transparent'}`}
                         >
@@ -270,7 +298,8 @@ export default function CustomProduct() {
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-start gap-4 mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary`}>Selecione a cor</h1>
-                    {productSelected.materials.colors.map((materialColor:string) => (
+
+                    {products && products[0].colors[productID].map((materialColor:string) => (
                         <div
                             onClick={() => setColor(materialColor)}
                             style={{ backgroundColor: materialColor }}
@@ -283,41 +312,45 @@ export default function CustomProduct() {
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>tamanhos</h1>
-                    <ChoiceQuantityCard
-                        priceProductQuantity={String(productSelected.price).replace(',','.')}
-                        priceProduct={String(productSelected.price).replace(',','.')}
-                        quantity={1}
-                        active={quantity == 1 ? true : false}
-                        onClick={() => selectQuantity(1)}
-                    />
-                    <ChoiceQuantityCard 
-                        priceProductQuantity={String(productSelected.price).replace(',','.')}
-                        priceProduct={String(Number(Number(productSelected.price.replace(',','.')) * 10).toFixed(2))}
-                        quantity={10}
-                        active={quantity == 10 ? true : false}
-                        onClick={() => selectQuantity(10)}
-                    />
-                    <ChoiceQuantityCard
-                        priceProductQuantity={String(productSelected.price).replace(',','.')}
-                        priceProduct={String(Number(Number(productSelected.price.replace(',','.')) * 15).toFixed(2))}
-                        quantity={15}
-                        active={quantity == 15 ? true : false}
-                        onClick={() => selectQuantity(15)}
-                    />
-                    <ChoiceQuantityCard
-                        priceProductQuantity={String(productSelected.price).replace(',','.')}
-                        priceProduct={String(Number(Number(productSelected.price.replace(',','.')) * 20).toFixed(2))}
-                        quantity={20}
-                        active={quantity == 20 ? true : false}
-                        onClick={() => selectQuantity(20)}
-                    />
-                    <ChoiceQuantityCard
-                        priceProductQuantity={String(productSelected.price).replace(',','.')}
-                        priceProduct={String(Number(Number(productSelected.price.replace(',','.')) * 50).toFixed(2))}
-                        quantity={50}
-                        active={quantity == 50 ? true : false}
-                        onClick={() => selectQuantity(50)}
-                    />
+                    {products && (
+                        <>
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(products[0].prices[productID]).replace(',','.')}
+                                quantity={1}
+                                active={quantity == 1 ? true : false}
+                                onClick={() => selectQuantity(1)}
+                            />
+                            <ChoiceQuantityCard 
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 10).toFixed(2))}
+                                quantity={10}
+                                active={quantity == 10 ? true : false}
+                                onClick={() => selectQuantity(10)}
+                            />
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 15).toFixed(2))}
+                                quantity={15}
+                                active={quantity == 15 ? true : false}
+                                onClick={() => selectQuantity(15)}
+                            />
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 20).toFixed(2))}
+                                quantity={20}
+                                active={quantity == 20 ? true : false}
+                                onClick={() => selectQuantity(20)}
+                            />
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 50).toFixed(2))}
+                                quantity={50}
+                                active={quantity == 50 ? true : false}
+                                onClick={() => selectQuantity(50)}
+                            />
+                        </>
+                    )}
                     <button
                         onClick={() => {
                             setModalQuantity(true)
