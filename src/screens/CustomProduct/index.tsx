@@ -32,8 +32,10 @@ export default function CustomProduct() {
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, addToCart, user, toggleUser }:any = useContext(GlobalContext);
+
     const [size, setSize] = useState<string | undefined>(undefined)
     const [color, setColor] = useState<string | undefined>(undefined)
+    const [material, setMaterial] = useState<string | undefined>(undefined)
     const [quantity, setQuantity] = useState<number>(1)
     const [print, setPrint] = useState<string | undefined>(undefined)
     const [modalQuantity, setModalQuantity] = useState<boolean>(false)
@@ -57,6 +59,7 @@ export default function CustomProduct() {
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
+        console.log(productSelected.materials[1])
         //VERIFICA SE O PRODUTO FOI SELECIONADO
         if(productSelected.name == "undefined") {
             navigate('/principal')
@@ -135,11 +138,14 @@ export default function CustomProduct() {
                                 //ADICIONA ITEM AO CARRINHO
                                 addToCart({
                                     id: id,
-                                    name: productSelected.name,
                                     image: productSelected.image,
+                                    name: productSelected.name,
                                     price: productSelected.price,
                                     quantity: quantity,
-                                    estampa: url
+                                    estampa: url,
+                                    size: size,
+                                    material: material,
+                                    color: color,
                                 })
 
                                 //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
@@ -151,7 +157,10 @@ export default function CustomProduct() {
                                         image: productSelected.image,
                                         price: productSelected.price,
                                         quantity: quantity,
-                                        estampa: url
+                                        estampa: url,
+                                        size: size,
+                                        material: material,
+                                        color: color,
                                     }
                                 })
                                 .then(function (response) {
@@ -197,7 +206,7 @@ export default function CustomProduct() {
     return(
         <div className={`w-screen h-screen flex flex-col items-center justify-start max-w-[500px] mx-auto`}>
             <Header />
-            <div className={`bg-[#efefef] w-[95%] flex flex-col items-center justify-start rounded-[12px]`}>
+            <div className={`bg-my-gray w-[95%] flex flex-col items-center justify-start rounded-[12px]`}>
                 <h1 className={`mt-5 text-[20px] font-bold text-my-secondary`}>Vamos criar sua {productSelected.name}</h1>
                 
                 <div className={`mt-3 mb-5 w-[80%] h-[3px] bg-my-secondary`}></div>
@@ -208,7 +217,7 @@ export default function CustomProduct() {
                     <label
                         onClick={() => setPrint('my')}
                         htmlFor="estampa"
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
                     >
                         <p className={`text-[18px] font-bold text-my-secondary`}>sua estampa</p>
                         <FaBatteryFull className={`text-my-secondary text-[48px]`}/>
@@ -221,7 +230,7 @@ export default function CustomProduct() {
                             setImgURL('imagens')
                             setPrint('other')
                         }}
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
                     >
                         <p className={`text-[18px] font-bold text-my-secondary`}>estampa pré pronta</p>
                         <FaBatteryEmpty className={`text-my-secondary text-[48px]`}/>
@@ -245,26 +254,31 @@ export default function CustomProduct() {
                 </div>
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-between mb-5`}>
-                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>estampa</h1>
+                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>material</h1>
+                    {productSelected.materials.materiais.map((materialName:string) => (
+                        <button
+                            onClick={() => {
+                                setMaterial(String(materialName))
+                            }}
+                            className={`w-[47.5%] flex-grow-[1] mb-2 bg-my-gray flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] py-3 border-[1px] ${material == String(materialName) ? 'border-my-primary' : 'border-transparent'}`}
+                        >
+                            <FaTshirt className={`text-my-secondary text-[48px] mb-3`}/>
+                            <p className={`text-[18px] font-bold text-my-secondary`}>{materialName}</p>
+                        </button>
+                    ))}
+                </div>
 
-                    <button
-                        onClick={() => {
-                            setColor('white')
-                        }}
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] py-3 border-[1px] ${color == 'white' ? 'border-my-primary' : 'border-transparent'}`}
-                    >
-                        <FaTshirt className={`text-my-secondary text-[48px] mb-3`}/>
-                        <p className={`text-[18px] font-bold text-my-secondary`}>Branco <br/> Poliester</p>
-                    </button>
-                    <button
-                        onClick={() => {
-                            setColor('black')
-                        }}
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] py-3 border-[1px] ${color == 'black' ? 'border-my-primary' : 'border-transparent'}`}
-                    >
-                        <FaTshirt className={`text-my-secondary text-[48px] mb-3`}/>
-                        <p className={`text-[18px] font-bold text-my-secondary`}>Colorido <br/> Poliester</p>
-                    </button>
+                <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-start gap-4 mb-5`}>
+                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary`}>Selecione a cor</h1>
+                    {productSelected.materials.colors.map((materialColor:string) => (
+                        <div
+                            onClick={() => setColor(materialColor)}
+                            style={{ backgroundColor: materialColor }}
+                            className={`w-[60px] h-[60px] rounded-[6px] ${color == materialColor && 'scale-[1.2]'}`}
+                        >
+                        </div>
+
+                    ))}
                 </div>
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5`}>
@@ -308,7 +322,7 @@ export default function CustomProduct() {
                         onClick={() => {
                             setModalQuantity(true)
                         }}
-                        className={`w-[30.8%] mb-2 bg-[#efefef] flex items-center flex-col justify-between mr-2 rounded-[8px] p-2`}
+                        className={`w-[30.8%] mb-2 bg-my-gray flex items-center flex-col justify-between mr-2 rounded-[8px] p-2`}
                     >
                         <div className={`rounded-[50%] border-[2px] border-my-secondary p-2`}>
                             <FaPlus className={`text-my-secondary`} />
@@ -317,7 +331,7 @@ export default function CustomProduct() {
                     </button>
                 </div>
             </div>
-            <div className={`my-5 w-[90%] bg-[#efefef] p-4 font-bold rounded-[8px]`}>
+            <div className={`my-5 w-[90%] bg-my-gray p-4 font-bold rounded-[8px]`}>
                 <p className={`text-my-secondary text-[24px]`}>Valor <span className={`text-my-primary`}>R${String(Number(Number(productSelected.price.replace(',', '.') * quantity)).toFixed(2)).replace('.', ',')}</span></p>
             </div>
             <button
@@ -327,7 +341,7 @@ export default function CustomProduct() {
                     
                     handleUpload()
                 }}
-                className={`${btnActive == true ? 'bg-my-primary' : 'bg-[#b1b1b1]'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold`}
+                className={`${btnActive == true ? 'bg-my-primary' : 'bg-my-gray'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold`}
             >
                 Adicionar ao carrinho
             </button>

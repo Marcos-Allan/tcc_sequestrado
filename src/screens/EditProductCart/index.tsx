@@ -1,5 +1,5 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
-import { useContext, useState, useRef } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -9,6 +9,7 @@ import Footer from '../../components/Footer';
 import ModalCart from '../../components/ModalCart';
 import ModalUser from '../../components/ModalUser';
 import ModalLogout from '../../components/ModalLogout';
+import LoadingPage from '../../components/LoadingPage';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -25,22 +26,33 @@ export default function EditProductCart() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelectedEdit, updateItemsCart, user, toggleUser }:any = useContext(GlobalContext);
+    const { productSelectedEdit, updateItemsCart, user, toggleUser, toggleLoading }:any = useContext(GlobalContext);
+
+    //VARIÁVEIS IMUTÁVEIS
+    const myImg:any = productSelectedEdit.image
+    const myName:any = productSelectedEdit.name
+    const myPrice:any = productSelectedEdit.price
 
     //UTILIZAÇÃO DO HOOK useState
     const [myEstampa, setMyEstampa] = useState<any>(productSelectedEdit.print)
-    const myImg:any = productSelectedEdit.image
     const [myMaterial, setMyMaterial] = useState<any>(productSelectedEdit.material)
-    const myName:any = productSelectedEdit.name
-    const myPrice:any = productSelectedEdit.price
     const [myQuantity, setMyQuantity] = useState<any>(productSelectedEdit.quantity)
     const [mySize, setMySize] = useState<any>(productSelectedEdit.size)
 
+    //ARRAY DE POSSIBILIDADES DAS PROPS DO PRODUTOS
     const sizes = ['pp', 'p', 'm', 'g', 'gg', 'xg']
-    const materiais = ['poliester', 'algodão', 'veludo']
+    const materiais = ['poliester', 'algodão', 'veludo', 'sarja']
 
     //UTILIZA O HOOK useState
     const [img, setImg] = useState<string>('')
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        //VERIFICA SE O PRODUTO FOI SELECIONADO
+        if(productSelectedEdit.name == "undefined") {
+            navigate('/principal')
+        }
+    },[])
 
     const handleSize = () => {
         // Obtém o índice atual da escolha
@@ -87,6 +99,9 @@ export default function EditProductCart() {
 
     // FUNÇÃO RESPONSÁVEL POR DAR UPLOAD NA IMAGEM
     async function handleUpload() {
+        //MUDA O ESTADO DA APLICAÇÃO PARA true
+        toggleLoading(true)
+
         //CRIA UMA PROMISSE 
         return new Promise((resolve, reject) => {
             //PEGA O ARQUIVO QUE FOI SELECIONADO
@@ -102,19 +117,27 @@ export default function EditProductCart() {
                     userId: user.id,
                     pedidoId: productSelectedEdit.id,
                     novosDados: {
-                        name: myName,
                         image: myImg,
+                        name: myName,
                         price: myPrice,
                         quantity: myQuantity,
                         estampa: myEstampa,
+                        size: mySize,
+                        material: myMaterial,
                     }
                 })
                 .then(function (response) {
                     //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
-                    console.log('aaaaaaaaaaaaaaa: '+response.data.historico_pedido)
+                    console.log(response.data.historico_pedido)
+
+                    //MUDA O ESTADO DA APLICAÇÃO PARA true
+                    toggleLoading(true)
 
                     //ATUALIZA OS DADOS DO USUÁRIO NO FRONTEND
                     toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
+
+                    //NAVEGA PARA A PÁGINA DE PERFIL
+                    navigate('/perfil')
                 })
                 .catch(function (error) {
                     console.log('erro: ', error)
@@ -155,11 +178,13 @@ export default function EditProductCart() {
                                     userId: user.id,
                                     pedidoId: productSelectedEdit.id,
                                     novosDados: {
-                                        name: myName,
                                         image: myImg,
+                                        name: myName,
                                         price: myPrice,
                                         quantity: myQuantity,
-                                        estampa: url
+                                        estampa: url,
+                                        size: mySize,
+                                        material: myMaterial,
                                     }
                                 })
                                 .then(function (response) {
@@ -168,6 +193,9 @@ export default function EditProductCart() {
 
                                     //ATUALIZA OS DADOS DO USUÁRIO NO FRONTEND
                                     toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
+
+                                    //MUDA O ESTADO DA APLICAÇÃO PARA false
+                                    toggleLoading(false)
                                 })
                                 .catch(function (error) {
                                     console.log('erro: ', error)
@@ -189,16 +217,24 @@ export default function EditProductCart() {
         });
     }
 
+    function handleQuantity(e:any) {
+        if(Number(e.target.value) <= 1){
+            setMyQuantity(1)
+        }else{
+            setMyQuantity(e.target.value)
+        }
+    }
+
     return(
-        <div className={`w-screen h-screen bg-my-white font-inter max-w-[500px] mx-auto flex flex-col items-center justify-start`}>
+        <div className={`w-screen h-screen bg-my-gray font-inter max-w-[500px] mx-auto flex flex-col items-center justify-start`}>
             <Header />
-            <div className={`p-3 w-[80%] bg-[#b1b1b1] flex items-center justify-center mt-4 rounded-[12px]`}>
+            <div className={`p-3 w-[80%] bg-my-white flex items-center justify-center mt-4 rounded-[12px]`}>
                 <img src={myImg} />
             </div>
             <p className={`underline text-my-secondary font-bold text-[24px] my-4`}>{myName}</p>
             
             <div className={`w-[80%] flex flex-row justify-between mt-4`}>
-                <label htmlFor="estampa" className={`w-[47%] bg-[#b1b1b1] p-3 rounded-[8px] flex flex-col`}>
+                <label htmlFor="estampa" className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col`}>
                     <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>estampa</p>
                     <img src={myEstampa} alt="" />
                 </label>
@@ -207,7 +243,7 @@ export default function EditProductCart() {
 
                 <div
                     onClick={() => handleSize()}
-                    className={`w-[47%] bg-[#b1b1b1] p-3 rounded-[8px] flex flex-col`}
+                    className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col`}
                 >
                     <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
                     <p className={`text-center text-my-secondary text-[34px] uppercase font-bold`}>{mySize}</p>
@@ -218,20 +254,20 @@ export default function EditProductCart() {
                 onClick={() => {
                     handleMaterial()
                 }}
-                className={`w-[80%] flex flex-row bg-[#b1b1b1] p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize`}
+                className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize`}
             >
                 <p className={`text-my-secondary font-bold capitalize text-[20px]`}>material</p>
                 <p className='text-my-primary text-[18px]'>{myMaterial}</p>
             </div>
             
-            <div className={`w-[80%] flex flex-row bg-[#b1b1b1] p-3 rounded-[6px] mt-3 items-center justify-between font-bold`}>
+            <div className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold`}>
                 <p className={`text-my-secondary font-bold capitalize text-[20px]`}>quantidade</p>
-                <input type='number' value={myQuantity} onChange={(e) => setMyQuantity(e.target.value)} className='text-my-primary text-[18px] text-center w-[40px]' />
+                <input type='number' value={myQuantity} onChange={handleQuantity} className='text-my-primary text-[18px] text-center w-[40px]' />
             </div>
             
-            <div className={`w-[90%] flex flex-row bg-[#b1b1b1] p-3 rounded-[6px] mt-5 items-center justify-between font-bold`}>
+            <div className={`w-[90%] flex flex-row bg-my-white p-3 rounded-[6px] mt-5 items-center justify-between font-bold`}>
                 <p className={`text-my-secondary font-bold capitalize text-[22px]`}>valor</p>
-                <p className='text-my-primary text-[20px]'>R$ {String(Number(Number(String(myQuantity).replace(',', '.')) * Number(myQuantity)).toFixed(2)).replace('.', ',')}</p>
+                <p className='text-my-primary text-[20px]'>R$ {String(Number(Number(String(myPrice).replace(',', '.')) * Number(myQuantity)).toFixed(2)).replace('.', ',')}</p>
             </div>
 
             <button
@@ -255,8 +291,6 @@ export default function EditProductCart() {
 
                     //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
                     handleUpload()
-
-                    navigate('/perfil')
                 }}
                 className={`text-my-white font-bold bg-my-secondary rounded-[8px] mt-3 mb-5 text-[18px] px-5 py-2`}
             >Voltar ao carrinho</button>
@@ -265,6 +299,7 @@ export default function EditProductCart() {
             <ModalCart />
             <ModalUser />
             <ModalLogout />
+            <LoadingPage />
         </div>
     )
 }

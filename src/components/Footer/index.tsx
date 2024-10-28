@@ -8,7 +8,7 @@ import image from '../../../public/Logo texto com fundo.png'
 export default function Footer() {
     return(
         <>
-            <div className={`w-full flex flex-col items-center bg-my-secondary text-my-white font-inter py-6`}>
+            <div className={`w-full flex flex-col items-center bg-my-terciary text-my-white font-inter py-6`}>
                 <h1  className={`text-[20px] font-bold mb-2`}>Venha nos visitar</h1>
                 <p className={`mb-2`}>Rio Acima, Jundiaí - State of São Paulo, 13215-841</p>
                 <h2 className={`text-[20px] font-bold mb-3`}>Contatos</h2>

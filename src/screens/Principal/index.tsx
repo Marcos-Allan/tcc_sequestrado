@@ -37,8 +37,8 @@ export default function Principal() {
     const { user, setProductSelected }:any = useContext(GlobalContext);
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR O PRODUTO SELECIONADO
-    function selectProduct(image:string, name:string, price:string) {
-        setProductSelected({ image: image, name:name, price:price })
+    function selectProduct(image:string, name:string, price:string, materials:any) {
+        setProductSelected({ image: image, name:name, price:price, materials:materials })
         navigate(`/product/${name.toLowerCase()}`)
     }
 
@@ -75,7 +75,7 @@ export default function Principal() {
 
     return(
         <div
-            className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden max-w-[500px] mx-auto scrollbar scrollbar-thumb-my-secondary scrollbar-track-my-white`}
+            className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden max-w-[500px] mx-auto scrollbar scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
         >
             <Header />
             
@@ -87,47 +87,48 @@ export default function Principal() {
             </div>
 
             <div className="flex items-start justify-center flex-wrap py-4 w-[80%] relative">
+
                 <ProductCard
                     image={camisa}
                     name={'Camiseta'}
                     price={'39,90'}
-                    onClick={() => selectProduct(camisa, 'Camiseta', '39,90')}
+                    onClick={() => selectProduct(camisa, 'Camiseta', '39,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={caneca}
                     name={'Caneca'}
                     price={'29,90'}
-                    onClick={() => selectProduct(caneca, 'Caneca', '29,90')}
+                    onClick={() => selectProduct(caneca, 'Caneca', '29,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={caderno}
                     name={'Caderno'}
                     price={'19,90'}
-                    onClick={() => selectProduct(caderno, 'Caderno', '19,90')}
+                    onClick={() => selectProduct(caderno, 'Caderno', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={almofada}
                     name={'Almofada'}
                     price={'19,90'}
-                    onClick={() => selectProduct(almofada, 'Almofada', '19,90')}
+                    onClick={() => selectProduct(almofada, 'Almofada', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={agenda}
                     name={'Agenda'}
                     price={'14,90'}
-                    onClick={() => selectProduct(agenda, 'Agenda', '14,90')}
+                    onClick={() => selectProduct(agenda, 'Agenda', '14,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={azulejo}
                     name={'Azulejo'}
                     price={'09,90'}
-                    onClick={() => selectProduct(azulejo, 'Azulejo', '09,90')}
+                    onClick={() => selectProduct(azulejo, 'Azulejo', '09,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={almochaveiro}
                     name={'Almochaveiro'}
                     price={'12,90'}
-                    onClick={() => selectProduct(almochaveiro, 'Almochaveiro', '12,90')}
+                    onClick={() => selectProduct(almochaveiro, 'Almochaveiro', '12,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
             </div>
 

@@ -23,8 +23,8 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     );
     const [openCart, setOpenCart] = useState<boolean>(false)
     const [openPerfil, setOpenPerfil] = useState<boolean>(false)
-    const [productSelected, setProductSelected] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined' })
-    const [productSelectedEdit, setProductSelectedEdit] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined' })
+    const [productSelected, setProductSelected] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p'] })
+    const [productSelectedEdit, setProductSelectedEdit] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p']  })
     const [cart, setCart] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [logoutModal, setLogoutModal] = useState<boolean>(false);

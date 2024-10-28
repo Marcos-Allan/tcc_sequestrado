@@ -39,7 +39,7 @@ export default function Perfil() {
                 <p className={`font-bold`}>Histórico de compras do usuário:</p>
                 
                 {user.history.map((compra:any) => (
-                    <div className={`flex flex-row items-center justify-between bg-[#b1b1b1] my-2 w-[90%] mx-auto p-2 rounded-[8px] relative`}>
+                    <div className={`flex flex-row items-center justify-between bg-my-white my-2 w-[90%] mx-auto p-2 rounded-[8px] relative`}>
                         <img src={compra.image} className={`w-[90px] h-[60px]`}/>
                         <img src={compra.estampa} className={`w-[90px] h-[60px]`}/>
                         <div className={`flex flex-col items-center justify-start gap-2`}>

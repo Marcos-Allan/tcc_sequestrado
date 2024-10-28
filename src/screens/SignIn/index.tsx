@@ -41,7 +41,6 @@ export default function SignIn() {
         //MUDA O ESTADO DA APLICAÇÃO PARA true
         toggleLoading(true)
 
-        // axios.get(`https://tcc2-backend3.onrender.com/login/${email}`)
         axios.post(`https://back-tcc-murilo.onrender.com/login`, {
             email: email,
             password: password,
