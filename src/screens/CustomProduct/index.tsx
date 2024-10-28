@@ -2,6 +2,7 @@
 import { useContext, useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DOS COMPONENTES
 import Footer from "../../components/Footer";
@@ -26,6 +27,9 @@ export default function CustomProduct() {
     //FAZ REFERENCIA A UM ELEMENTO
     const inputFileRef = useRef<HTMLInputElement | null>(null)
 
+    //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
+    const navigate = useNavigate()
+
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, addToCart, user, toggleUser }:any = useContext(GlobalContext);
     const [size, setSize] = useState<string | undefined>(undefined)
@@ -39,7 +43,7 @@ export default function CustomProduct() {
     const [img, setImg] = useState<string>('')
     const [imgURL, setImgURL] = useState<string | undefined>(undefined)
 
-    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA ´ERECARREGADA
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         //VERIFICA SE O USUÁRIO DEFINIU TODAS AS OPÇÕES
         if(size !== undefined && color !== undefined && quantity !== undefined){
@@ -50,6 +54,14 @@ export default function CustomProduct() {
             setBtnActive(false)
         }
     },[size, color, quantity, print, img])
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        //VERIFICA SE O PRODUTO FOI SELECIONADO
+        if(productSelected.name == "undefined") {
+            navigate('/principal')
+        }
+    },[])
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR A IMAGEM DOS ARQUIVOS DO USUÁRIO
     const handleFileIMG = () => {
@@ -111,12 +123,18 @@ export default function CustomProduct() {
                                 //SETA A URL DA IMAGEM
                                 setImgURL(url);
                                 
+                                //ESCREVE A URL DA IMAGEM NO CONSOLE
                                 console.log('imagem salva: '+ url)
 
+                                //PEGA A URL DA IMAGEM
                                 setImg(url);
 
-                                //
+                                //GERA UM ID ALEATÓRIO
+                                const id = Math.floor(Math.random() * 99999)
+                                
+                                //ADICIONA ITEM AO CARRINHO
                                 addToCart({
+                                    id: id,
                                     name: productSelected.name,
                                     image: productSelected.image,
                                     price: productSelected.price,
@@ -124,9 +142,11 @@ export default function CustomProduct() {
                                     estampa: url
                                 })
 
+                                //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
                                 axios.put('https://back-tcc-murilo.onrender.com/add-historico', {
                                     userId: user.id,
                                     pedido: {
+                                        id: id,
                                         name: productSelected.name,
                                         image: productSelected.image,
                                         price: productSelected.price,

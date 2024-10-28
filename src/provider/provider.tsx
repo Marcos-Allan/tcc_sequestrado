@@ -32,14 +32,14 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     //FUNÇÃO RESPONSÁVEL POR ADICIONAR NOVO ITEM NO CARRINHO
     function addToCart(newItem: any) {
         //RETORNA true SE O ITEM ESTIVR NO CARRINHO E false SE NÃO ESTIVER
-        const existingItem = cart.find((item: any) => item.name === newItem.name);
+        const existingItem = cart.find((item: any) => item.id === newItem.id);
 
         //VERIFICA SE O ITEM JA ESTÁ NO CARRINHO OU NÃO
         if (existingItem) {
             //ADICIONA MAIS NA QUANTIDADE DO PRODUTO
             setCart(
                 cart.map((item: any) =>
-                    item.name === newItem.name
+                    item.id === newItem.id
                     ? { ...item, quantity: item.quantity + newItem.quantity }
                     : item
                 )
@@ -76,8 +76,16 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         ],  })
     }
 
+    const updateItemsCart = (id:any, novosDados:any) => {
+        setCart(prevCart =>
+            prevCart.map(item =>
+            item.id === id ? { ...item, ...novosDados } : item
+            )
+        );
+    };
+
     return (
-        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit } as any}>
+        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart } as any}>
             {children}
         </GlobalContext.Provider>
     );

@@ -50,6 +50,7 @@ export default function Perfil() {
                         <div
                             onClick={() => {
                                 setProductSelectedEdit({
+                                    id: compra.id,
                                     image: compra.image,
                                     name: compra.name,
                                     print: compra.estampa,
