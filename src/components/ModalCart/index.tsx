@@ -27,7 +27,7 @@ export default function ModalCart() {
 
     //FUNÇÃO RESPONSÁVEL POR FINALIZAR O PEDIDO
     function finishOrder() {
-        axios.post('http://localhost:3000/finalizar-compra', {
+        axios.post('https://back-tcc-murilo.onrender.com/finalizar-compra', {
             userId: user.id
         })
         .then(function (response) {

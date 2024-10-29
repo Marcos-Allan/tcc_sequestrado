@@ -176,7 +176,7 @@ export default function CustomProduct() {
 
                                 //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
                                 // axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
-                                axios.put('http://localhost:3000/add-carrinho', {
+                                axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
                                     userId: user.id,
                                     produto: {
                                         id: id,
