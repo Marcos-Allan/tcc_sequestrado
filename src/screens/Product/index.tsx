@@ -108,8 +108,8 @@ export default function Product() {
             <button
                 onClick={() => {
                     selectProduct(
-                        productSelected.image,
-                        'Caneca',
+                        products[0].img[productID],
+                        `${productSelected.name}`,
                         `${String(Number(products[0].prices[productID]))}`,
                         {materiais: products[0].type, colors: products[0].colors[productID]},
                         products[0].type[productID]

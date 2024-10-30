@@ -1,6 +1,3 @@
-//IMPORTAÇÃO DOS ICONES
-import { FaBatteryFull } from "react-icons/fa"
-
 //TIPAGEM DAS PROPS DO COMPONENETE
 interface Props {
     size: String,
@@ -16,7 +13,6 @@ export default function ChoiceSizeCard(props: Props) {
                 ${props.active == true ? 'border-my-primary' : 'border-transparent'}
             `}
         >
-            <FaBatteryFull className={`text-my-secondary text-[48px]`}/>
             <p className={`text-[18px] font-bold text-my-secondary uppercase`}>{props.size}</p>
         </button>
     )

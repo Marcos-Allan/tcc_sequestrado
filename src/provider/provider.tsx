@@ -6,7 +6,7 @@ import { GlobalContext } from "./context";
 
 export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     //RESGATA O VALOR DO LOCALSTORAGE
-    const userLS = localStorage.getItem('userPU')
+    const userLS = localStorage.getItem('userculturalPassport')
 
     //UTILIZAÇÃO DO HOOK useState
     const [user, setUser] = useState<any>(
@@ -58,7 +58,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     //FUNÇÃO RESPONSÁVEL POR ATUALIZAR OS DADOS DO USUÁRIO
     function toggleUser(id:any, name:string, email:string, history:any, logged:boolean) {
         //SALVA OS DADOS DO USUÁRIO NO localStorage
-        localStorage.setItem('userPU', JSON.stringify({ id: id, name: name, email: email, history: history, logged: logged }))
+        localStorage.setItem('userculturalPassport', JSON.stringify({ id: id, name: name, email: email, history: history, logged: logged }))
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
         setUser({ id: id, name: name, email: email, history: history, logged: logged })
@@ -67,7 +67,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     //FUNÇÃO RESPONSÁVEL POR COLOCAR O MODAL NA TELA
     function toggleLogoutUser() {
         //SALVA OS DADOS DO USUÁRIO NO localStorage
-        localStorage.removeItem('userPU')
+        localStorage.removeItem('userculturalPassport')
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
         setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", history: [

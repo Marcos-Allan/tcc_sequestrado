@@ -33,26 +33,60 @@ export default function CustomProduct() {
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, addToCart, user }:any = useContext(GlobalContext);
 
-    const [size, setSize] = useState<string | undefined>(undefined)
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        //VERIFICA SE TEM ITEM ESCOLHIDO
+        if(productSelected.name == 'undefined') {
+            //NAVEGA PARA A PÁGINA INICIAL
+            navigate('/principal')
+        }
+    },[])
+
+
+    //UTILIZA O HOOK useState
+    const [size, setSize] = useState<string | undefined>('pp')
     const [color, setColor] = useState<string | undefined>(undefined)
     const [material, setMaterial] = useState<string | undefined>(undefined)
     const [quantity, setQuantity] = useState<number>(1)
     const [print, setPrint] = useState<string | undefined>(undefined)
     const [modalQuantity, setModalQuantity] = useState<boolean>(false)
     const [btnActive, setBtnActive] = useState<boolean>(false)
-
     const [products, setProducts] = useState<any>()
-    const [productID, setProductID] = useState<number>(1)
-
-    //UTILIZA O HOOK useState
+    const [productID, setProductID] = useState<number>(0)
     const [img, setImg] = useState<string>('')
     const [imgURL, setImgURL] = useState<string | undefined>(undefined)
 
+    //FUNÇÃO RESPONSÁEL POR PEGAR O INDICE DO PRODUTO
+    function getIndice() {
+        switch (productSelected.material) {
+            case 'porcelana':
+                setProductID(0)
+            break;
+            
+            case 'plástica':
+                setProductID(1)
+            break;
+            
+            case 'mágica':
+                setProductID(2)
+            break;
+            
+            case 'de colher':
+                setProductID(3)
+            break;
+        
+            default:
+                break;
+        }
+    }
+
     //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
     function getProducts() {
+        getIndice()
         axios.get('https://back-tcc-murilo.onrender.com/all-products')
         .then(function (response) {
             
+            //PEGA O PRODUTO
             setProducts(response.data)
             
             console.log(response.data[0].colors[productID])
@@ -74,7 +108,7 @@ export default function CustomProduct() {
             //MUDA O ESTADO do btnActiv PARA false
             setBtnActive(false)
         }
-    },[size, color, quantity, print, img])
+    },[size , color, quantity, print, img])
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -160,18 +194,20 @@ export default function CustomProduct() {
 
                                 //GERA UM ID ALEATÓRIO
                                 const id = Math.floor(Math.random() * 99999)
-                                
+
                                 //ADICIONA ITEM AO CARRINHO
                                 addToCart({
                                     id: id,
                                     image: products[0].img[productID],
-                                    name: productSelected.name,
+                                    name: productSelected && productSelected.name,
                                     price: products[0].prices[productID],
                                     quantity: quantity,
                                     estampa: url,
                                     size: size,
                                     material: material,
                                     color: color,
+                                    colors: products[0].colors[productID],
+                                    types: products[0].type
                                 })
 
                                 //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
@@ -181,13 +217,14 @@ export default function CustomProduct() {
                                     produto: {
                                         id: id,
                                         image: products[0].img[productID],
-                                        name: productSelected.name,
-                                        price: productSelected.price,
+                                        name: productSelected && productSelected.name,
+                                        price: productSelected && productSelected.price,
                                         quantity: quantity,
                                         estampa: url,
                                         size: size,
                                         material: material,
                                         color: color,
+                                        colors: products[0].colors[productID]
                                     }
                                 })
                                 .then(function (response) {
@@ -234,7 +271,7 @@ export default function CustomProduct() {
         <div className={`w-screen h-screen flex flex-col items-center justify-start max-w-[500px] mx-auto`}>
             <Header />
             <div className={`bg-my-gray w-[95%] flex flex-col items-center justify-start rounded-[12px]`}>
-                <h1 className={`mt-5 text-[20px] font-bold text-my-secondary`}>Vamos criar sua {productSelected.name}</h1>
+                <h1 className={`mt-5 text-[20px] font-bold text-my-secondary`}>Vamos criar sua {productSelected && productSelected.name}</h1>
                 
                 <div className={`mt-3 mb-5 w-[80%] h-[3px] bg-my-secondary`}></div>
 
@@ -270,19 +307,21 @@ export default function CustomProduct() {
                     )}
                 </div>
 
-                <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5`}>
-                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>tamanhos</h1>
-                    <ChoiceSizeCard active={size == 'pp' ? true : false} size={'pp'} onClick={() => selectSize('pp')} />
-                    <ChoiceSizeCard active={size == 'p' ? true : false} size={'p'} onClick={() => selectSize('p')} />
-                    <ChoiceSizeCard active={size == 'm' ? true : false} size={'m'} onClick={() => selectSize('m')} />
-                    <ChoiceSizeCard active={size == 'g' ? true : false} size={'g'} onClick={() => selectSize('g')} />
-                    <ChoiceSizeCard active={size == 'gg' ? true : false} size={'gg'} onClick={() => selectSize('gg')} />
-                    <ChoiceSizeCard active={size == 'xg' ? true : false} size={'xg'} onClick={() => selectSize('xg')} />
-                </div>
+                {productSelected.name == 'Camiseta' && (
+                    <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5`}>
+                        <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>tamanhos</h1>
+                        <ChoiceSizeCard active={size == 'pp' ? true : false} size={'pp'} onClick={() => selectSize('pp')} />
+                        <ChoiceSizeCard active={size == 'p' ? true : false} size={'p'} onClick={() => selectSize('p')} />
+                        <ChoiceSizeCard active={size == 'm' ? true : false} size={'m'} onClick={() => selectSize('m')} />
+                        <ChoiceSizeCard active={size == 'g' ? true : false} size={'g'} onClick={() => selectSize('g')} />
+                        <ChoiceSizeCard active={size == 'gg' ? true : false} size={'gg'} onClick={() => selectSize('gg')} />
+                        <ChoiceSizeCard active={size == 'xg' ? true : false} size={'xg'} onClick={() => selectSize('xg')} />
+                    </div>
+                )}
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-between mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>material</h1>
-                    {productSelected.materials.materiais.map((materialName:string, i:number) => (
+                    {productSelected && productSelected.materials.materiais.map((materialName:string, i:number) => (
                         <button
                             onClick={() => {
                                 setMaterial(String(materialName))
@@ -303,7 +342,7 @@ export default function CustomProduct() {
                         <div
                             onClick={() => setColor(materialColor)}
                             style={{ backgroundColor: materialColor }}
-                            className={`w-[60px] h-[60px] rounded-[6px] ${color == materialColor && 'scale-[1.2]'}`}
+                            className={`w-[60px] h-[60px] rounded-[6px] ${color == materialColor && 'scale-[1.2]'} border-[1px] border-my-black`}
                         >
                         </div>
 
@@ -365,7 +404,9 @@ export default function CustomProduct() {
                 </div>
             </div>
             <div className={`my-5 w-[90%] bg-my-gray p-4 font-bold rounded-[8px]`}>
-                <p className={`text-my-secondary text-[24px]`}>Valor <span className={`text-my-primary`}>R${String(Number(Number(productSelected.price.replace(',', '.') * quantity)).toFixed(2)).replace('.', ',')}</span></p>
+                {products && (
+                    <p className={`text-my-secondary text-[24px]`}>Valor <span className={`text-my-primary`}>R${String(Number(Number(products[0].prices[productID].replace(',','.')) * quantity).toFixed(2)).replace('.', ',')}</span></p>
+                )}
             </div>
             <button
                 onClick={() => {

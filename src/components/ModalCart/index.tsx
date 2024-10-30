@@ -90,16 +90,15 @@ export default function ModalCart() {
                                     </div>
                                     <div
                                         onClick={() => {
-                                            console.log(cart)
                                             setProductSelectedEdit({
-                                                id: cart.id,
-                                                image: cart.image,
-                                                name: cart.name,
-                                                print: cart.estampa,
-                                                size: cart.size ? cart.size : 'g' ,
-                                                material: cart.material ? cart.material : 'poliester' ,
-                                                quantity: cart.quantity,
-                                                price: cart.price,
+                                                id: item.id,
+                                                image: item.image,
+                                                name: item.name,
+                                                print: item.estampa,
+                                                size: item.size,
+                                                material: item.material,
+                                                quantity: item.quantity,
+                                                price: item.price,
                                             })
 
                                             navigate(`/cart/edit/${cart.name}`)

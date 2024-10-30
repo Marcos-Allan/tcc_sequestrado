@@ -2,6 +2,7 @@
 import { useContext, useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 //IMPORTAÇÃO DOS COMPONENTES
 import Header from "../../components/Header";
@@ -26,33 +27,122 @@ export default function EditProductCart() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelectedEdit, updateItemsCart, user, toggleUser, toggleLoading }:any = useContext(GlobalContext);
+    const { productSelectedEdit, user, toggleLoading, setCart }:any = useContext(GlobalContext);
 
     //VARIÁVEIS IMUTÁVEIS
-    const myImg:any = productSelectedEdit.image
     const myName:any = productSelectedEdit.name
     const myPrice:any = productSelectedEdit.price
-
+    
     //UTILIZAÇÃO DO HOOK useState
     const [myEstampa, setMyEstampa] = useState<any>(productSelectedEdit.print)
     const [myMaterial, setMyMaterial] = useState<any>(productSelectedEdit.material)
     const [myQuantity, setMyQuantity] = useState<any>(productSelectedEdit.quantity)
     const [mySize, setMySize] = useState<any>(productSelectedEdit.size)
+    const [productID, setProductID] = useState<number>(0)
+    const [img, setImg] = useState<string>('')
 
     //ARRAY DE POSSIBILIDADES DAS PROPS DO PRODUTOS
-    const sizes = ['pp', 'p', 'm', 'g', 'gg', 'xg']
-    const materiais = ['poliester', 'algodão', 'veludo', 'sarja']
+    const sizes = productSelectedEdit.types
+    const materiais = ['porcelana', 'plástica', 'mágica', 'de colher']
+    const [products, setProducts] = useState<any>()
 
-    //UTILIZA O HOOK useState
-    const [img, setImg] = useState<string>('')
+    //FUNÇÃO RESPONSÁVEL POR REMOVER ITEM DO CARRINHO
+    function removeItem() {
+        axios.delete('https://back-tcc-murilo.onrender.com/remove-carrinho', {
+            data: {
+                userId: user.id,
+                itemId: productSelectedEdit.id,
+            }
+        })
+        .then(function (response) {
+            //ATUALIZA O CARRINHO PARA 
+            setCart(response.data.cart)
+
+            //COLOCA ALERT NA TELA
+            notifySucess('item deletado com sucesso')
+
+            //NAVEGA PARA A PÁGINA PRINCIPAL
+            navigate('/perfil')
+        })
+        .catch(function (error)  {
+            //ESCREVE O ERRO OCORRIDO NO CONSOLE
+            console.log(error)
+        })
+
+    }
+
+    //FUNÇÃO RESPONSÁEL POR PEGAR O INDICE DO PRODUTO
+    function getIndice() {
+        switch (productSelectedEdit.material) {
+            case 'porcelana':
+                setProductID(0)
+                console.log(0)
+                break;
+                
+            case 'plástica':
+                setProductID(1)
+                console.log(1)
+            break;
+                
+            case 'mágica':
+                setProductID(2)
+                console.log(2)
+            break;
+                    
+            case 'de colher':
+                setProductID(3)
+                console.log(3)
+            break;
+        
+            default:
+                break;
+        }
+    }
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
+    function getProducts() {
+        //CHAMA A FUNÇÃO QUE PEGA OS ITEMS ATUAIS
+        getIndice()
+        
+        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        .then(function (response) {
+            
+            //PEGA O PRODUTO ESCOLHIDO
+            setProducts(response.data)
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
+        //CHAMA A FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
+        getProducts()
+    },[])
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        //CHAMA A FUNÇÃO QUE PEGA O ID DO PRODUTO
+        getIndice()
+
+        //SETA A IMAGEM COMO VAZIA PARA NÃO DAR ERRO NO DEPLOY
+        setImg('')
+
         //VERIFICA SE O PRODUTO FOI SELECIONADO
         if(productSelectedEdit.name == "undefined") {
             navigate('/principal')
         }
     },[])
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        //MUDA AS PROPS DO PRODUTO
+        setMyEstampa(productSelectedEdit.print)
+        setMyMaterial(productSelectedEdit.material)
+        setMyQuantity(productSelectedEdit.quantity)
+        setMySize(productSelectedEdit.size)
+    },[productSelectedEdit])
 
     const handleSize = () => {
         // Obtém o índice atual da escolha
@@ -67,14 +157,17 @@ export default function EditProductCart() {
     
     const handleMaterial = () => {
         // Obtém o índice atual da escolha
-        const currentIndex = materiais.indexOf(myMaterial)
-        
+        const currentIndex = materiais.indexOf(myMaterial);
+    
         // Calcula o próximo índice (volta ao início se for o último)
-        const nextIndex = (currentIndex + 1) % materiais.length
-        
-        // Atualiza o estado com o próximo valor de escolha
-        setMyMaterial(materiais[nextIndex])
-    }
+        const nextIndex = (currentIndex + 1) % materiais.length;
+    
+        // Atualiza o estado com o próximo material e define o productID
+        setMyMaterial(materiais[nextIndex]);
+
+        //ATUALIZA O INDICE DO PRODUTO
+        setProductID(nextIndex);
+    };
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR A IMAGEM DOS ARQUIVOS DO USUÁRIO
     const handleFileIMG = () => {
@@ -99,6 +192,7 @@ export default function EditProductCart() {
 
     // FUNÇÃO RESPONSÁVEL POR DAR UPLOAD NA IMAGEM
     async function handleUpload() {
+
         //MUDA O ESTADO DA APLICAÇÃO PARA true
         toggleLoading(true)
 
@@ -106,41 +200,39 @@ export default function EditProductCart() {
         return new Promise((resolve, reject) => {
             //PEGA O ARQUIVO QUE FOI SELECIONADO
             const file = inputFileRef.current?.files?.[0];
-
+            
             //VERIFICA SE NÃO TEM IMAGEM
             if (!file) {
                 //RESOLVE A PROMEISSE PASSANDO A IMAGEM COMO PARÂMETRO
                 resolve(img);
+                
+                //MUDA O ESTADO DA APLICAÇÃO PARA false
+                toggleLoading(false)
 
-                //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
-                axios.put('https://back-tcc-murilo.onrender.com/update-historico', {
+                //ROTA DE ATUALIZAÇÃO DO ITEM DO CARRINHO
+                axios.put('https://back-tcc-murilo.onrender.com/update-carrinho', {
                     userId: user.id,
-                    pedidoId: productSelectedEdit.id,
+                    itemId: productSelectedEdit.id,
                     novosDados: {
-                        image: myImg,
+                        id: productSelectedEdit.id,
+                        image:  products[0].img[productID],
+                        material: myMaterial,
                         name: myName,
                         price: myPrice,
-                        quantity: myQuantity,
                         estampa: myEstampa,
+                        quantity: myQuantity,
                         size: mySize,
-                        material: myMaterial,
                     }
                 })
                 .then(function (response) {
-                    //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
-                    console.log(response.data.historico_pedido)
+                    //ATUALIZA O CARRINHO
+                    setCart(response.data.cart)
 
-                    //MUDA O ESTADO DA APLICAÇÃO PARA true
-                    toggleLoading(true)
-
-                    //ATUALIZA OS DADOS DO USUÁRIO NO FRONTEND
-                    toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
-
-                    //NAVEGA PARA A PÁGINA DE PERFIL
-                    navigate('/perfil')
+                    //COLOCA ALERT NA TELA
+                    notifySucess('item atualizado com sucesso')
                 })
                 .catch(function (error) {
-                    console.log('erro: ', error)
+                    console.log(error)
                 })
             } else {
                 const storageRef = ref(storage, `images/estampas/${String(Math.floor(Math.random() * 99999999999999))}`);
@@ -170,36 +262,34 @@ export default function EditProductCart() {
                                 //ESCREVE A URL DA IMAGEM NO CONSOLE
                                 console.log('imagem salva: '+ url)
 
-                                //PEGA A URL DA IMAGEM
-                                setImg(url);
-
-                                //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
-                                axios.put('https://back-tcc-murilo.onrender.com/update-historico', {
+                                //ROTA DE ATUALIZAÇÃO DO ITEM DO CARRINHO
+                                axios.put('https://back-tcc-murilo.onrender.com/update-carrinho', {
                                     userId: user.id,
-                                    pedidoId: productSelectedEdit.id,
+                                    itemId: productSelectedEdit.id,
                                     novosDados: {
-                                        image: myImg,
+                                        id: productSelectedEdit.id,
+                                        image:  products[0].img[productID],
+                                        material: myMaterial,
                                         name: myName,
                                         price: myPrice,
-                                        quantity: myQuantity,
                                         estampa: url,
+                                        quantity: myQuantity,
                                         size: mySize,
-                                        material: myMaterial,
                                     }
                                 })
                                 .then(function (response) {
-                                    //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
-                                    console.log('aaaaaaaaaaaaaaa: '+response.data.historico_pedido)
+                                    //ATUALIZA O CARRINHO
+                                    setCart(response.data.cart)
 
-                                    //ATUALIZA OS DADOS DO USUÁRIO NO FRONTEND
-                                    toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
-
-                                    //MUDA O ESTADO DA APLICAÇÃO PARA false
-                                    toggleLoading(false)
+                                    //COLOCA ALERT NA TELA
+                                    notifySucess('item atualizado com sucesso')
                                 })
                                 .catch(function (error) {
-                                    console.log('erro: ', error)
+                                    console.log(error)
                                 })
+
+                                //MUDA O ESTADO DA APLICAÇÃO PARA false
+                                toggleLoading(false)
 
                                 //RESOLVE A PROMESSA PASSANDO A IMAGEM COMO PARÂMETRO
                                 resolve(url);
@@ -225,11 +315,14 @@ export default function EditProductCart() {
         }
     }
 
+    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
+    const notifySucess = (message:string) => toast.success(message);
+
     return(
-        <div className={`w-screen h-screen bg-my-gray font-inter max-w-[500px] mx-auto flex flex-col items-center justify-start`}>
+        <div className={`w-screen min-h-screen bg-my-gray font-inter max-w-[500px] mx-auto flex flex-col items-center justify-start`}>
             <Header />
             <div className={`p-3 w-[80%] bg-my-white flex items-center justify-center mt-4 rounded-[12px]`}>
-                <img src={myImg} />
+                <img src={products && products[0].img[productID]} />
             </div>
             <p className={`underline text-my-secondary font-bold text-[24px] my-4`}>{myName}</p>
             
@@ -278,22 +371,21 @@ export default function EditProductCart() {
             >Continuar comprando</button>
             <button
                 onClick={() => {
-                    updateItemsCart(productSelectedEdit.id, {                        
-                        id: productSelectedEdit.id,
-                        image:  myImg,
-                        material: myMaterial,
-                        name: myName,
-                        price: myPrice,
-                        print: myEstampa,
-                        quantity: myQuantity,
-                        size: mySize,
-                    })
-
                     //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
                     handleUpload()
                 }}
                 className={`text-my-white font-bold bg-my-secondary rounded-[8px] mt-3 mb-5 text-[18px] px-5 py-2`}
             >Voltar ao carrinho</button>
+            
+            <button
+                onClick={() => {
+                    //CHAMA A FUNÇÃO QUE REMOVE O ITEM DO CARRINHO
+                    removeItem()
+                }}
+                className={`text-my-white bg-red-600 uppercase font-bold px-4 py-2 my-2 rounded-[8px]`}
+            >
+                remover
+            </button>
 
             <Footer />
             <ModalCart />
