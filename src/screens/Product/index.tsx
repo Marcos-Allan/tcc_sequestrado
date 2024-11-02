@@ -12,6 +12,7 @@ import ModalLogout from '../../components/ModalLogout';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
+import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 export default function Product() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
@@ -143,6 +144,7 @@ export default function Product() {
             <ModalUser />
             <ModalCart />
             <ModalLogout />
+            <ModalFinishBuy />
         </div>        
     )
 }

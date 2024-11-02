@@ -17,11 +17,13 @@ import ModalLogout from '../../components/ModalLogout';
 import { GlobalContext } from "../../provider/context";
 
 //IMPORTAÇÃO DOS ICONES
-import { FaBatteryFull, FaBatteryEmpty, FaTshirt, FaPlus } from "react-icons/fa"
+import { FaTshirt, FaPlus } from "react-icons/fa"
+import { AiFillPicture, AiFillFileImage } from "react-icons/ai"
 
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utils/firebase';
+import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 export default function CustomProduct() {
     //FAZ REFERENCIA A UM ELEMENTO
@@ -283,8 +285,8 @@ export default function CustomProduct() {
                         htmlFor="estampa"
                         className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
                     >
-                        <p className={`text-[18px] font-bold text-my-secondary`}>sua estampa</p>
-                        <FaBatteryFull className={`text-my-secondary text-[48px]`}/>
+                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>escolha sua estampa</p>
+                        <AiFillPicture className={`mt-2 text-my-secondary text-[48px]`}/>
                     </label>
 
                     <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
@@ -296,8 +298,8 @@ export default function CustomProduct() {
                         }}
                         className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
                     >
-                        <p className={`text-[18px] font-bold text-my-secondary`}>estampa pré pronta</p>
-                        <FaBatteryEmpty className={`text-my-secondary text-[48px]`}/>
+                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>estampa pré pronta</p>
+                        <AiFillFileImage className={`mt-2 text-my-secondary text-[48px]`}/>
                     </button>
 
                     {imgURL !== undefined && (
@@ -452,6 +454,7 @@ export default function CustomProduct() {
                 </div>
             )}
             <ModalLogout />
+            <ModalFinishBuy />
         </div>
     )
 }

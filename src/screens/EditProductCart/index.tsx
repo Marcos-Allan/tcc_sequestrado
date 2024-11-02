@@ -18,6 +18,7 @@ import { GlobalContext } from "../../provider/context";
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utils/firebase';
+import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 export default function EditProductCart() {
     //FAZ REFERENCIA A UM ELEMENTO
@@ -392,6 +393,7 @@ export default function EditProductCart() {
             <ModalUser />
             <ModalLogout />
             <LoadingPage />
+            <ModalFinishBuy />
         </div>
     )
 }

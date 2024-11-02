@@ -28,6 +28,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     const [cart, setCart] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [logoutModal, setLogoutModal] = useState<boolean>(false);
+    const [finishBuy, setFinishBuy] = useState<boolean>(false);
 
     //FUNÇÃO RESPONSÁVEL POR ADICIONAR NOVO ITEM NO CARRINHO
     function addToCart(newItem: any) {
@@ -76,16 +77,24 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         ],  })
     }
 
+    //FUNÇÃO RESPONSÁVEL POR ATUALIZAR O CARRRINHO NO FRONTEND
     const updateItemsCart = (id:any, novosDados:any) => {
+        //PERCORRE O ARRAY DO CARRINHO
         setCart(prevCart =>
             prevCart.map(item =>
-            item.id === id ? { ...item, ...novosDados } : item
+                //VERIFICA SE O ID DO PRODUTO QUE VAI SER ATUALIZADO É IGUAL AO ID DO PRODUTO E ATUALIZA ELE
+                item.id === id ? { ...item, ...novosDados } : item
             )
         );
     };
 
+    //FUNÇÃO RESPONSÁVEL POR ATIVAR O MODAL DE FINALIZAR COMPRA
+    function toggleFinishBuy() {
+        setFinishBuy(!finishBuy)
+    }
+
     return (
-        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, setCart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart } as any}>
+        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, setCart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart, finishBuy, toggleFinishBuy } as any}>
             {children}
         </GlobalContext.Provider>
     );

@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
+import ModalFinishBuy from "../../components/ModalFinishBuy"
 
 export default function Principal() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
@@ -136,6 +137,7 @@ export default function Principal() {
             <ModalCart />
             <ModalUser />
             <ModalLogout />
+            <ModalFinishBuy />
         </div>
     )
 }

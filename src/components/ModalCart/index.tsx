@@ -1,7 +1,5 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext, useEffect } from 'react'
-import axios from 'axios'
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DOS ICONES
@@ -18,41 +16,12 @@ export default function ModalCart() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openCart, setOpenCart, cart, user, toggleUser, setCart, setProductSelectedEdit }:any = useContext(GlobalContext);
+    const { openCart, setOpenCart, cart, setProductSelectedEdit, toggleFinishBuy }:any = useContext(GlobalContext);
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREFGADA
     useEffect(() => {
         console.log(cart)
     },[cart])
-
-    //FUNÇÃO RESPONSÁVEL POR FINALIZAR O PEDIDO
-    function finishOrder() {
-        axios.post('https://back-tcc-murilo.onrender.com/finalizar-compra', {
-            userId: user.id
-        })
-        .then(function (response) {
-            console.log(response.data.historico_pedido)
-            //COLOCA O HISTÓRICO DO PEDIDO NO FRONT-END DA APLICAÇÃO
-            toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
-            
-            //LIMPA O ARRAY DE CARRINHO
-            setCart([])
-
-            //COLOCA O ALERT DE SUCESSO NA TELA
-            notifySucess('compra finalizada com sucesso')
-        })
-        .catch(function (error) {
-            //COLOCA O ALERT DE SUCESSO NA TELA
-            notifyError('compra finalizada com sucesso')
-
-            //ESCREVE NO CONSOLE O ERRO
-            console.log(error)
-        })
-    }
-
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
 
     return(
         <>
@@ -111,7 +80,13 @@ export default function ModalCart() {
                             </div>
                         ))}
                         <div
-                            onClick={() => finishOrder()}
+                            onClick={() => {
+                                //MUDA O MODAL PARA FECHADO
+                                toggleFinishBuy()
+
+                                //MUDA O MODAL PARA FECHADO
+                                setOpenCart(false)
+                            }}
                             className={`bg-my-primary py-[6px] absolute bottom-0 mx-auto mb-1 w-[80%] text-center text-my-white rounded-[6px]`}
                         >Finalizar pedido</div>
                     </div>
