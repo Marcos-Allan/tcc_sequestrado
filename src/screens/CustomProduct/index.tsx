@@ -37,6 +37,7 @@ export default function CustomProduct() {
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
+        console.log(productSelected)
         //VERIFICA SE TEM ITEM ESCOLHIDO
         if(productSelected.name == 'undefined') {
             //NAVEGA PARA A PÁGINA INICIAL
@@ -47,7 +48,7 @@ export default function CustomProduct() {
 
     //UTILIZA O HOOK useState
     const [size, setSize] = useState<string | undefined>('pp')
-    const [color, setColor] = useState<string | undefined>(undefined)
+    const [color, setColor] = useState<string | undefined>('')
     const [material, setMaterial] = useState<string | undefined>(undefined)
     const [quantity, setQuantity] = useState<number>(1)
     const [print, setPrint] = useState<string | undefined>(undefined)
@@ -92,8 +93,8 @@ export default function CustomProduct() {
             setProducts(response.data)
             
             console.log(response.data[0].colors[productID])
-            console.log(response.data[0].type[productID]) //type
-            console.log(response.data[0].prices[productID]) //price
+            console.log(response.data[0].type[productID])
+            console.log(response.data[0].prices[productID])
         })
         .catch(function (error) {
             console.log(error)
