@@ -14,9 +14,9 @@ export default function ProductCard(props: Props) {
     return(
         <div
             onClick={() => props.onClick()}
-            className="flex items-center justify-start flex-col bg-my-pink min-w-[40%] py-1 px-2 rounded-[16px] mx-[5px] mt-4"
+            className="flex items-center justify-start flex-col bg-my-pink w-[40%] py-1 px-2 rounded-[16px] mx-[5px] mt-4"
         >
-            <div className="flex items-center justify-center w-[120px] h-[120px]">
+            <div className="flex items-center justify-center w-[90px] h-[90px]">
                 <img src={`${props.image}`} alt="" className={`w-auto h-auto`} />
             </div>
             <h1 className={`text-my-secondary font-inter font-bold text-[24px]`}>{props.name}</h1>

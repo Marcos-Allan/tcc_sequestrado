@@ -64,24 +64,36 @@ export default function CustomProduct() {
         switch (productSelected.material) {
             case 'porcelana':
                 setProductID(0)
+                setColor('white')
             break;
-            
+                
             case 'plástica':
                 setProductID(1)
+                setColor('white')
             break;
             
             case 'mágica':
                 setProductID(2)
+                setColor('red')
             break;
             
             case 'de colher':
                 setProductID(3)
+                setColor('white')
             break;
         
             default:
                 break;
         }
     }
+
+    //FUNÇÃO RESPONSÁVEL POR COLOCAR A COR DO PRIMEIRO ÍNDICE
+    useEffect(() => {
+        //VERIFICA SE JÁ TEM PRODUTOS CADASTRADOS
+        if(products){
+            setColor(products[0].colors[productID][0])
+        }
+    },[productID])
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
     function getProducts() {

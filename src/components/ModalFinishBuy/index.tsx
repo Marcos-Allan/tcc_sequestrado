@@ -14,23 +14,28 @@ export default function ModalFinishBuy() {
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { finishBuy, toggleFinishBuy, cart, user, toggleUser, setCart }:any = useContext(GlobalContext);
-
     let numeroTelefone:string | undefined = undefined
     let mensagemCodificada:any | undefined = undefined
     let linkWhatsApp:any | undefined = undefined
-    const messages:any = []
+    
+    function sendMessage() {
 
+        const messages:any = []
+        
         cart.map((item:any) => {
+            console.log(item)
 
             const message = `${item.quantity} ${Number(item.quantity) <= 1 ? `${item.name}` : `${item.name}s`} ${item.material} de estampa "${item.estampa}" na cor ${item.color} ${item.name == 'Camiseta' ? `no tamanho ${item.size} ` : ''}no valor de R$${String(Number(Number(item.price) * Number(item.quantity)).toFixed(2)).replace('.', ',')}`
 
             messages.push(message)
         })
 
-    numeroTelefone = "5511939460815";
-    mensagemCodificada = encodeURIComponent(`Olá tudo bom eu gostaria de pedir ${messages.length >= 1 ? `${messages},` : `${messages}.`}`);
-    linkWhatsApp = `https://wa.me/${numeroTelefone}?text=${mensagemCodificada}`;
+        numeroTelefone = "5511939460815";
+        mensagemCodificada = encodeURIComponent(`Olá tudo bom eu gostaria de pedir ${messages.length >= 1 ? `${messages},` : `${messages}.`}`);
+        linkWhatsApp = `https://wa.me/${numeroTelefone}?text=${mensagemCodificada}`;
 
+        window.open(linkWhatsApp, '_blank')
+    }
 
     //FUNÇÃO RESPONSÁVEL POR FINALIZAR O PEDIDO
     function finishOrder() {
@@ -78,15 +83,16 @@ export default function ModalFinishBuy() {
                         }}
                         className={`flex items-center justify-between bg-my-white px-6 py-4 gap-5 rounded-[8px]`}
                     >
-                        <a href={linkWhatsApp} target='_blank'>
+                        {/* <a href={linkWhatsApp} target='_blank'> */}
                             <FaWhatsapp
                                 className={`text-[60px] text-my-secondary`}
                                 onClick={() => {
+                                    sendMessage()
                                     toggleFinishBuy()
                                     finishOrder()
                                 }}
                             />
-                        </a>
+                        {/* </a> */}
                         <MdOutlineEmail
                             className={`text-[60px] text-my-secondary`}
                             onClick={() => {
