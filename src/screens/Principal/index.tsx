@@ -76,18 +76,19 @@ export default function Principal() {
 
     return(
         <div
-            className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden max-w-[500px] mx-auto scrollbar scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
+            className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
         >
             <Header />
             
             <Carousel images={[img, img2]} />
             
-            <div className={`mt-6 w-[80%] flex items-center justify-center text-my-secondary font-bold font-inter`}>
-                <p className="mr-2 text-[22px]">Produtos</p>
+            <div className={`mt-6 w-[80%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px]`}>
+                <div className="hidden sm:block flex-grow-[1] bg-my-secondary h-[3px]"></div>
+                <p className="mr-2 sm:ml-2 text-[22px]">Produtos</p>
                 <div className="flex-grow-[1] bg-my-secondary h-[3px]"></div>
             </div>
 
-            <div className="flex items-start justify-center flex-wrap py-4 w-[80%] relative">
+            <div className="flex items-start justify-center flex-wrap py-4 w-[80%] relative max-w-[900px]">
 
                 <ProductCard
                     image={camisa}

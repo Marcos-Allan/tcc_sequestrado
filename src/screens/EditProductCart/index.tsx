@@ -320,80 +320,82 @@ export default function EditProductCart() {
     const notifySucess = (message:string) => toast.success(message);
 
     return(
-        <div className={`w-screen min-h-screen bg-my-gray font-inter max-w-[500px] mx-auto flex flex-col items-center justify-start`}>
-            <Header />
-            <div className={`p-3 w-[80%] bg-my-white flex items-center justify-center mt-4 rounded-[12px]`}>
-                <img src={products && products[0].img[productID]} />
-            </div>
-            <p className={`underline text-my-secondary font-bold text-[24px] my-4`}>{myName}</p>
-            
-            <div className={`w-[80%] flex flex-row justify-between mt-4`}>
-                <label htmlFor="estampa" className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col`}>
-                    <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>estampa</p>
-                    <img src={myEstampa} alt="" />
-                </label>
+        <div className={`overflow-x-hidden`}>
+            <div className={`w-screen min-h-screen bg-my-white overflow-x-hidden px-10 sm:px-5 flex flex-col items-center relative`}>
+                <Header />
+                <div className={`p-3 w-[80%] bg-my-gray flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
+                    <img src={products && products[0].img[productID]} className={`w-full`} />
+                </div>
+                <p className={`underline text-my-secondary font-bold text-[24px] my-4 max-w-[700px]`}>{myName}</p>
+                
+                <div className={`w-[80%] flex flex-row justify-between mt-4 max-w-[700px]`}>
+                    <label htmlFor="estampa" className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col`}>
+                        <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>estampa</p>
+                        <img src={myEstampa} alt="" />
+                    </label>
 
-                <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
+                    <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
+
+                    <div
+                        onClick={() => handleSize()}
+                        className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col max-w-[700px]`}
+                    >
+                        <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
+                        <p className={`text-center text-my-secondary text-[34px] uppercase font-bold`}>{mySize}</p>
+                    </div>
+                </div>
 
                 <div
-                    onClick={() => handleSize()}
-                    className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col`}
+                    onClick={() => {
+                        handleMaterial()
+                    }}
+                    className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize max-w-[700px]`}
                 >
-                    <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
-                    <p className={`text-center text-my-secondary text-[34px] uppercase font-bold`}>{mySize}</p>
+                    <p className={`text-my-secondary font-bold capitalize text-[20px]`}>material</p>
+                    <p className='text-my-primary text-[18px]'>{myMaterial}</p>
                 </div>
-            </div>
+                
+                <div className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold max-w-[700px]`}>
+                    <p className={`text-my-secondary font-bold capitalize text-[20px]`}>quantidade</p>
+                    <input type='number' value={myQuantity} onChange={handleQuantity} className='text-my-primary text-[18px] text-center w-[40px]' />
+                </div>
+                
+                <div className={`w-[90%] flex flex-row bg-my-white p-3 rounded-[6px] mt-5 items-center justify-between font-bold max-w-[700px]`}>
+                    <p className={`text-my-secondary font-bold capitalize text-[22px]`}>valor</p>
+                    <p className='text-my-primary text-[20px]'>R$ {String(Number(Number(String(myPrice).replace(',', '.')) * Number(myQuantity)).toFixed(2)).replace('.', ',')}</p>
+                </div>
 
-            <div
-                onClick={() => {
-                    handleMaterial()
-                }}
-                className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize`}
-            >
-                <p className={`text-my-secondary font-bold capitalize text-[20px]`}>material</p>
-                <p className='text-my-primary text-[18px]'>{myMaterial}</p>
-            </div>
-            
-            <div className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold`}>
-                <p className={`text-my-secondary font-bold capitalize text-[20px]`}>quantidade</p>
-                <input type='number' value={myQuantity} onChange={handleQuantity} className='text-my-primary text-[18px] text-center w-[40px]' />
-            </div>
-            
-            <div className={`w-[90%] flex flex-row bg-my-white p-3 rounded-[6px] mt-5 items-center justify-between font-bold`}>
-                <p className={`text-my-secondary font-bold capitalize text-[22px]`}>valor</p>
-                <p className='text-my-primary text-[20px]'>R$ {String(Number(Number(String(myPrice).replace(',', '.')) * Number(myQuantity)).toFixed(2)).replace('.', ',')}</p>
-            </div>
+                <button
+                    onClick={() => {
+                        navigate('/principal')
+                    }}
+                    className={`text-my-white font-bold bg-my-primary rounded-[8px] mt-5 text-[20px] px-5 py-2`}
+                >Continuar comprando</button>
+                <button
+                    onClick={() => {
+                        //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
+                        handleUpload()
+                    }}
+                    className={`text-my-white font-bold bg-my-secondary rounded-[8px] mt-3 mb-5 text-[18px] px-5 py-2`}
+                >Voltar ao carrinho</button>
+                
+                <button
+                    onClick={() => {
+                        //CHAMA A FUNÇÃO QUE REMOVE O ITEM DO CARRINHO
+                        removeItem()
+                    }}
+                    className={`text-my-white bg-red-600 uppercase font-bold px-4 py-2 my-2 rounded-[8px] mb-6`}
+                >
+                    remover
+                </button>
 
-            <button
-                onClick={() => {
-                    navigate('/principal')
-                }}
-                className={`text-my-white font-bold bg-my-primary rounded-[8px] mt-5 text-[20px] px-5 py-2`}
-            >Continuar comprando</button>
-            <button
-                onClick={() => {
-                    //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
-                    handleUpload()
-                }}
-                className={`text-my-white font-bold bg-my-secondary rounded-[8px] mt-3 mb-5 text-[18px] px-5 py-2`}
-            >Voltar ao carrinho</button>
-            
-            <button
-                onClick={() => {
-                    //CHAMA A FUNÇÃO QUE REMOVE O ITEM DO CARRINHO
-                    removeItem()
-                }}
-                className={`text-my-white bg-red-600 uppercase font-bold px-4 py-2 my-2 rounded-[8px]`}
-            >
-                remover
-            </button>
-
+                <ModalCart />
+                <ModalUser />
+                <ModalLogout />
+                <LoadingPage />
+                <ModalFinishBuy />
+            </div>
             <Footer />
-            <ModalCart />
-            <ModalUser />
-            <ModalLogout />
-            <LoadingPage />
-            <ModalFinishBuy />
         </div>
     )
 }

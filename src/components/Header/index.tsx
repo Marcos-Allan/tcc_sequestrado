@@ -30,7 +30,7 @@ export default function Header() {
     return(
         <div className={`w-full bg-my-white flex items-center ${(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') ? 'justify-between' : 'justify-center'} px-3 py-2`}>
             <div
-                className={`w-full flex items-center justify-center text-my-secondary sm:justify-start`}
+                className={`w-full flex items-center justify-start text-my-secondary sm:justify-start`}
                 onClick={() => navigate('/principal')}
             >
                 <img

@@ -24,7 +24,7 @@ export default function Carousel(props: Props) {
     };
 
     return (
-        <div className="relative w-full max-w-lg mx-auto">
+        <div className="relative w-full">
             <div className="overflow-hidden">
                 <img
                     src={props.images[currentIndex]}

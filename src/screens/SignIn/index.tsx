@@ -12,10 +12,10 @@ import Button from "../../components/Button";
 import Divider from "../../components/Divider";
 import LoadingPage from '../../components/LoadingPage';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
-import Footer from '../../components/Footer';
 
 export default function SignIn() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
