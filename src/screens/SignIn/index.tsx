@@ -15,6 +15,7 @@ import Header from '../../components/Header';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
+import Footer from '../../components/Footer';
 
 export default function SignIn() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
@@ -123,41 +124,44 @@ export default function SignIn() {
     },[emailValid, passwordValid])
 
     return(
-        <div className={`w-screen h-screen bg-my-white px-10 flex flex-col max-w-[500px] mx-auto`}>
-            <Header />
-            <h1 className={`mt-5 text-[28px] text-my-secondary font-inter font-bold mb-2`}>Faça login com sua conta</h1>
-            <p className={`font-inter text-my-gray font-bold text-[16px] mb-6`}>È bom ter você novamente!</p>
-            
-            <Input
-                label={'Email'}
-                placeholder={'Coloque seu endereço de email'}
-                validate={emailValid}
-                value={email}
-                onChange={handleEmailInput}
-            />
-            
-            <Input
-                label={'Senha'}
-                placeholder={'Coloque sua senha'}
-                type={'password'}
-                validate={passwordValid}
-                value={password}
-                onChange={handlePasswordInput}
-            />
+        <div className={`overflow-x-hidden`}>
+            <div className={`w-screen min-h-screen bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
+                <Header />
+                <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Faça login com sua conta</h1>
+                <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>È bom ter você novamente!</p>
+                
+                <Input
+                    label={'Email'}
+                    placeholder={'Coloque seu endereço de email'}
+                    validate={emailValid}
+                    value={email}
+                    onChange={handleEmailInput}
+                />
+                
+                <Input
+                    label={'Senha'}
+                    placeholder={'Coloque sua senha'}
+                    type={'password'}
+                    validate={passwordValid}
+                    value={password}
+                    onChange={handlePasswordInput}
+                />
 
-            <Button text={'Fazer login'} validate={btnValid} event={() => signIn()} />
+                <Button text={'Login'} validate={btnValid} event={() => signIn()} />
 
-            <Divider />
+                <Divider />
 
-            <GoogleLogin />
+                <GoogleLogin />
 
-            <p className={`text-center mt-20 font-bold text-my-secondary text-[18px]`}>
-                Não tem uma conta ainda?
-                <Link to={'/sign-up'} className={`ml-2 underline text-my-primary`}>
-                    Cadastre-se
-                </Link>
-            </p>
-            <LoadingPage />
+                <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
+                    Não tem uma conta ainda?
+                    <Link to={'/sign-up'} className={`ml-2 underline text-my-primary`}>
+                        Cadastre-se
+                    </Link>
+                </p>
+                <LoadingPage />
+            </div>
+            <Footer />
         </div>
     )
 }

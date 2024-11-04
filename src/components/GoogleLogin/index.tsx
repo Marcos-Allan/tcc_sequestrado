@@ -75,7 +75,7 @@ export default function GoogleLogin() {
     return(
         <div
             onClick={() => handleGoogleLogin()}
-            className={`w-full border-[1px] border-my-gray py-3 rounded-[12px] flex items-center justify-center mt-8`}
+            className={`w-full max-w-[700px] border-[1px] border-my-gray py-3 rounded-[12px] flex items-center justify-center mt-8`}
         >
             <img
                 src={image}

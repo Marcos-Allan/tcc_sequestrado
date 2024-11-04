@@ -25,7 +25,7 @@ export default function Input(props: Props) {
     }
 
     return(
-        <div className='w-full'>
+        <div className='w-full max-w-[700px]'>
             <label
                 className={`font-bold
                     ${props.validate == true && 'text-my-primary'}
