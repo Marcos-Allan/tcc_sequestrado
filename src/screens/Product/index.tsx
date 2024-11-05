@@ -13,17 +13,23 @@ import ModalLogout from '../../components/ModalLogout';
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
 import ModalFinishBuy from '../../components/ModalFinishBuy';
+import ChoiceQuantityCard from '../../components/ChoiceQuantityCard';
+
+//IMPORTAÇÃO DOS ICONES
+import { FaPlus } from "react-icons/fa"
 
 export default function Product() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelected, setProductSelected }:any = useContext(GlobalContext);
+    const { productSelected, setProductSelected, toggleProduct }:any = useContext(GlobalContext);
 
     //UTILIZAÇÃO DO HOOK useState
     const [products, setProducts] = useState<any>()
     const [productID, setProductID] = useState<number>(0)
+    const [quantity, setQuantity] = useState<number>(1)
+    const [modalQuantity, setModalQuantity] = useState<boolean>(false)
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
     function getProducts() {
@@ -63,6 +69,11 @@ export default function Product() {
         }
     },[])
 
+    //FUNÇÃO RESPONSÁVEL POR SELECIONAR A QUANTIDADE
+    function selectQuantity(choiceQuantity:number) {
+        setQuantity(choiceQuantity)
+    }
+
     return(
         <div className={`w-screen min-h-screen flex flex-col items-center justify-start max-w-[500px] mx-auto bg-my-gray `}>
             <Header />
@@ -76,19 +87,22 @@ export default function Product() {
                 )}
             </div>
             
-            <div className={`w-full flex flex-row justify-between overflow-scroll mt-3`}>
+            <div className={`w-full flex flex-row justify-between overflow-x-scroll scrollbar mt-3`}>
                 {products && products.map((p:any) => (
                     <>
                         {p.type && p.type.map((sla:any, i:number) => (
                             <div
                                 id={sla}
-                                onClick={() => setProductID(i)}
-                                className={`w-auto mx-3 bg-my-white min-w-[120px] text-[12px] flex flex-col items-center justify-center py-2 px-4 rounded-[4px] scrollbar scrollbar-none`}
+                                onClick={() => {
+                                    setProductID(i)
+                                }}
+                                className={`w-auto mx-3 bg-my-white min-w-[120px] text-[12px] flex flex-col items-center justify-center py-2 px-4 rounded-[4px]`}
                             >
                                 <img
                                     src={p.img[i]}
                                     className={`w-[160px]`}
                                 />
+                                <p className={`mt-1 font-bold text-my-secondary`}>{p.type[i]}</p>
                             </div>
                         ))}
                     </>
@@ -101,11 +115,66 @@ export default function Product() {
             >{productSelected.name}</p>
             <p className={`text-[20px] text-my-primary font-inter`}>a partir de </p>
             {products && (
-                <p className={`text-[36px] text-my-primary font-inter font-bold`}>R$
+                <p className={`text-[36px] text-my-primary font-inter font-bold mb-4`}>R$
                     <span className="text-[48px]">{String(Number(products[0].prices[productID])).split(',')[0]}</span>,
                     <span>{String(String(Number(products[0].prices[productID]).toFixed(2))).replace('.', ',').split(',')[1]}</span>
                 </p>
             )}
+
+                <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5`}>
+                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>tamanhos</h1>
+                    {products && (
+                        <>
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(products[0].prices[productID]).replace(',','.')}
+                                quantity={1}
+                                active={quantity == 1 ? true : false}
+                                onClick={() => selectQuantity(1)}
+                            />
+                            <ChoiceQuantityCard 
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 10).toFixed(2))}
+                                quantity={10}
+                                active={quantity == 10 ? true : false}
+                                onClick={() => selectQuantity(10)}
+                            />
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 15).toFixed(2))}
+                                quantity={15}
+                                active={quantity == 15 ? true : false}
+                                onClick={() => selectQuantity(15)}
+                            />
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 20).toFixed(2))}
+                                quantity={20}
+                                active={quantity == 20 ? true : false}
+                                onClick={() => selectQuantity(20)}
+                            />
+                            <ChoiceQuantityCard
+                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 50).toFixed(2))}
+                                quantity={50}
+                                active={quantity == 50 ? true : false}
+                                onClick={() => selectQuantity(50)}
+                            />
+                        </>
+                    )}
+                    <button
+                        onClick={() => {
+                            setModalQuantity(true)
+                        }}
+                        className={`w-[30.8%] mb-2 bg-my-gray flex items-center flex-col justify-between mr-2 rounded-[8px] p-2`}
+                    >
+                        <div className={`rounded-[50%] border-[2px] border-my-secondary p-2`}>
+                            <FaPlus className={`text-my-secondary`} />
+                        </div>
+                        <p className={`font-bold text-[14px] text-my-secondary text-center`}>Adicionar quantidade</p>
+                    </button>
+                </div>
+
             <button
                 onClick={() => {
                     selectProduct(
@@ -115,6 +184,14 @@ export default function Product() {
                         {materiais: products[0].type, colors: products[0].colors[productID]},
                         products[0].type[productID]
                         )
+                    toggleProduct({
+                        img: products[0].img[productID],
+                        name: `${productSelected.name}`,
+                        prices: `${String(Number(products[0].prices[productID]))}`,
+                        materials: {materiais: products[0].type, colors: products[0].colors[productID]},
+                        quantity: quantity,
+                        material: products[0].type[productID],
+                    })
                 }}
                 className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold`}
             >
@@ -145,6 +222,35 @@ export default function Product() {
             <ModalCart />
             <ModalLogout />
             <ModalFinishBuy />
+
+            {modalQuantity == true && (
+                <div className={`fixed top-0 left-0 w-screen h-screen bg-[#000000ac] flex items-center justify-center`}>
+                    <div className={`flex flex-col max-w-[80%] w-[900px] bg-my-white rounded-[8px] p-5 justify-center items-center relative`}>
+                        <h1 className={`w-full text-my-secondary text-center mb-3 text-[24px] font-bold`}>Escolha a quantidade</h1>
+                        <input
+                            type="number"
+                            value={quantity}
+                            onChange={(e) => {
+                                if(Number(e.target.value) <= 0){
+                                    setQuantity(1)
+                                }else{
+                                    setQuantity(Number(e.target.value))
+                                }
+                            }}
+                            className={`text-[24px] outline-none w-full border-[1px] py-3 pl-2 border-my-secondary rounded-[6px] mb-2`}
+                        />
+                        <input
+                            onClick={(e) => {
+                                e.preventDefault()
+                                setModalQuantity(false)  
+                            }}
+                            type="submit"
+                            value="confirmar"
+                            className={`border-none outline-none uppercase w-full py-4 text-[18px] bg-my-secondary rounded-[6px] text-my-white`}
+                        />
+                    </div>
+                </div>
+            )}
         </div>        
     )
 }

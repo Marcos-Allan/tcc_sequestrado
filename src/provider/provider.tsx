@@ -23,12 +23,20 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     );
     const [openCart, setOpenCart] = useState<boolean>(false)
     const [openPerfil, setOpenPerfil] = useState<boolean>(false)
-    const [productSelected, setProductSelected] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p'] })
+    const [productSelected, setProductSelected] = useState<any>(localStorage.getItem('productPU') !== null
+        ? JSON.parse(localStorage.getItem('productPU')as any)
+        : { image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p'] })
     const [productSelectedEdit, setProductSelectedEdit] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p']  })
     const [cart, setCart] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [logoutModal, setLogoutModal] = useState<boolean>(false);
     const [finishBuy, setFinishBuy] = useState<boolean>(false);
+
+    //FUNÇÃO RESPONSÁVEL POR ATUALIZAR OS ITENS DO PRODUTO SELECIONADO
+    function toggleProduct(product:any) {
+        localStorage.setItem('productPU', JSON.stringify(product))
+        setProductSelected(product)
+    }
 
     //FUNÇÃO RESPONSÁVEL POR ADICIONAR NOVO ITEM NO CARRINHO
     function addToCart(newItem: any) {
@@ -94,7 +102,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, cart, setCart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart, finishBuy, toggleFinishBuy } as any}>
+        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, toggleProduct, cart, setCart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart, finishBuy, toggleFinishBuy } as any}>
             {children}
         </GlobalContext.Provider>
     );
