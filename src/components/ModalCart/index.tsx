@@ -34,7 +34,7 @@ export default function ModalCart() {
                     }}
                 >
                     <div
-                        className={`flex flex-col items-center justify-start pt-14 bg-[#ffffff] w-[300px] h-[250px] absolute right-[6px] top-[36px] rounded-[12px] z-[60]`}
+                        className={`flex flex-col items-center justify-start pt-14 bg-[#ffffff] w-[300px] h-[250px] absolute right-[6px] top-[36px] rounded-[12px] z-[60] pb-[250px]`}
                         onClick={(e) => {
                             //VERIFICA SE O MODAL ESTÁ ABERTO E FECHA ELE
                             e.stopPropagation()
@@ -47,48 +47,52 @@ export default function ModalCart() {
                             className={`absolute top-0 right-0 text-[28px] text-my-secondary mt-[13px] mr-[6px]`}
                         />
 
-                        {cart.map((item:any) => (
-                            <div className={`w-[92%] bg-[#efefef] h-[80px] rounded-[8px] flex flex-row items-center justify-between mb-4 relative px-3`}>
-                                <div className={`absolute top-[-8px] left-[-8px] text-[12px] text-my-white bg-my-secondary rounded-[50%] w-[20px] text-center flex items-center justify-center h-[20px]`}>{item.quantity}</div>
-                                <img src={item.estampa} alt="" className={`w-[70px]`} />
-                                <div className={`flex-grow-[1] flex flex-row items-center justify-between`}>
-                                    <img src={item.image} alt="" className={`w-[80px]`} />
-                                    <div>
-                                        <p className={`font-bold text-my-secondary text-[14px]`}>{item.name}</p>
-                                        <p className={`font-bold text-my-primary text-[14px]`}>R${item.price} uni</p>
-                                    </div>
-                                    <div
-                                        onClick={() => {
-                                            setProductSelectedEdit({
-                                                id: item.id,
-                                                image: item.image,
-                                                name: item.name,
-                                                print: item.estampa,
-                                                size: item.size,
-                                                material: item.material,
-                                                quantity: item.quantity,
-                                                price: item.price,
-                                            })
+                        <div className={`w-full min-h-[170px] overflow-y-scroll flex items-center justify-start flex-col overflow-x-hidden pt-[20px]`}>
+                            {cart.map((item:any) => (
+                                <div className={`w-[85%] bg-[#efefef] h-[80px] rounded-[8px] flex flex-row items-center justify-between mb-4 relative px-3`}>
+                                    <div className={`absolute top-[-8px] left-[-8px] text-[12px] text-my-white bg-my-secondary rounded-[50%] w-[20px] text-center flex items-center justify-center h-[20px]`}>{item.quantity}</div>
+                                    <img src={item.estampa} alt="" className={`w-[70px]`} />
+                                    <div className={`flex-grow-[1] flex flex-row items-center justify-between`}>
+                                        <img src={item.image} alt="" className={`w-[80px] h-[80px]`} />
+                                        <div>
+                                            <p className={`font-bold text-my-secondary text-[14px]`}>{item.name}</p>
+                                            <p className={`font-bold text-my-primary text-[14px]`}>R${item.price} uni</p>
+                                        </div>
+                                        <div
+                                            onClick={() => {
+                                                setProductSelectedEdit({
+                                                    id: item.id,
+                                                    image: item.image,
+                                                    name: item.name,
+                                                    print: item.estampa,
+                                                    size: item.size,
+                                                    material: item.material,
+                                                    quantity: item.quantity,
+                                                    price: item.price,
+                                                })
 
-                                            navigate(`/cart/edit/${cart.name}`)
-                                        }}
-                                        className={`bg-my-secondary w-10 h-10 flex items-center justify-center absolute top-[-20px] right-[-20px] rounded-[50%]`}
-                                    >
-                                        <CiEdit className={`text-[24px] text-my-white`} />
+                                                navigate(`/cart/edit/${cart.name}`)
+                                            }}
+                                            className={`bg-my-secondary w-8 h-8 flex items-center justify-center absolute top-[-20px] right-[-20px] rounded-[50%]`}
+                                        >
+                                            <CiEdit className={`text-[24px] text-my-white`} />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                        <div
-                            onClick={() => {
-                                //MUDA O MODAL PARA FECHADO
-                                toggleFinishBuy()
+                            ))}
+                        </div>
+                        <div className={`w-full absolute bottom-0 flex items-center justify-center bg-my-white py-3`}>
+                            <div
+                                onClick={() => {
+                                    //MUDA O MODAL PARA FECHADO
+                                    toggleFinishBuy()
 
-                                //MUDA O MODAL PARA FECHADO
-                                setOpenCart(false)
-                            }}
-                            className={`bg-my-primary py-[6px] absolute bottom-0 mx-auto mb-1 w-[80%] text-center text-my-white rounded-[6px]`}
-                        >Finalizar pedido</div>
+                                    //MUDA O MODAL PARA FECHADO
+                                    setOpenCart(false)
+                                }}
+                                className={`bg-my-primary py-[6px] w-[80%] text-center text-my-white rounded-[6px]`}
+                            >Finalizar pedido</div>
+                        </div>
                     </div>
                 </div>
             )}

@@ -29,7 +29,17 @@ export default function Product() {
     const [products, setProducts] = useState<any>()
     const [productID, setProductID] = useState<number>(0)
     const [quantity, setQuantity] = useState<number>(1)
+    const [typeInd, setTypeInd] = useState<number>(0)
     const [modalQuantity, setModalQuantity] = useState<boolean>(false)
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
+    useEffect(() => {
+        if(productSelected.name == "Caneca"){
+            setTypeInd(0)
+        }else{
+            setTypeInd(1)
+        }
+    },[])
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
     function getProducts() {
@@ -39,7 +49,7 @@ export default function Product() {
             
             setProducts(response.data)
 
-            console.log(response.data[0].type)
+            console.log(response.data)
             console.log(response.data[0].colors[productID])
             console.log(response.data[0].prices[productID])
         })
@@ -75,87 +85,94 @@ export default function Product() {
     }
 
     return(
-        <div className={`w-screen min-h-screen flex flex-col items-center justify-start max-w-[500px] mx-auto bg-my-gray `}>
+        <div
+            className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
+        >
             <Header />
-            <div className={`bg-my-white rounded-[16px] mt-5 flex items-center justify-center p-2 w-[80%] min-h-[400px]`}>
+            <div className={`bg-my-white rounded-[16px] mt-5 flex items-center justify-center p-2 w-[80%] min-h-[400px] max-w-[900px]`}>
                 {products && (
                     <img
-                        src={products[0].img[productID]}
+                        src={products[typeInd].img[productID]}
                         alt=""
                         className={`w-[330px]`}
                     />
                 )}
             </div>
             
-            <div className={`w-full flex flex-row justify-between overflow-x-scroll scrollbar mt-3`}>
-                {products && products.map((p:any) => (
-                    <>
-                        {p.type && p.type.map((sla:any, i:number) => (
-                            <div
-                                id={sla}
-                                onClick={() => {
-                                    setProductID(i)
-                                }}
-                                className={`w-auto mx-3 bg-my-white min-w-[120px] text-[12px] flex flex-col items-center justify-center py-2 px-4 rounded-[4px]`}
-                            >
-                                <img
-                                    src={p.img[i]}
-                                    className={`w-[160px]`}
-                                />
-                                <p className={`mt-1 font-bold text-my-secondary`}>{p.type[i]}</p>
-                            </div>
-                        ))}
-                    </>
-                ))}
+            <div className={`w-full flex flex-row justify-around overflow-x-scroll scrollbar min-h-[180px] mt-3 max-w-[900px] scrollbar-none`}>
+            {products && products.length >= 1 && (
+                <>
+                    {products[typeInd].type && products[typeInd].type.map((sla:any, i:number) => (
+                        <div
+                            key={i} // Adicione uma key se estiver usando React
+                            id={sla}
+                            onClick={() => {
+                                setProductID(i);
+                            }}
+                            className="w-auto mx-2 bg-my-white min-w-[120px] text-[12px] flex flex-col items-center justify-center py-2 px-4 rounded-[4px]"
+                        >
+                            <img
+                                src={products[typeInd].img[i]}
+                                className="w-[120px]"
+                            />
+                            <p className="mt-1 font-bold text-my-secondary">{products[typeInd].type[i]}</p>
+                        </div>
+                    ))}
+                </>
+            )}
             </div>
 
 
             <p
-                className={`mt-6 text-my-secondary font-inter capitalize font-bold text-[32px]`}
+                className={`mt-6 text-my-secondary font-inter capitalize font-bold text-[32px] max-w-[900px]`}
             >{productSelected.name}</p>
-            <p className={`text-[20px] text-my-primary font-inter`}>a partir de </p>
+
+            <p className={`text-[20px] text-my-primary font-inter max-w-[900px]`}>a partir de </p>
+            
             {products && (
-                <p className={`text-[36px] text-my-primary font-inter font-bold mb-4`}>R$
-                    <span className="text-[48px]">{String(Number(products[0].prices[productID])).split(',')[0]}</span>,
-                    <span>{String(String(Number(products[0].prices[productID]).toFixed(2))).replace('.', ',').split(',')[1]}</span>
+                <p className={`text-[36px] text-my-primary font-inter font-bold mb-4 max-w-[900px]`}>R$
+                    <span className="text-[48px]">
+                        {String(Number(products[typeInd].prices[productID])).split('.')[0]}
+                    </span>,
+                    <span>{String(String(Number(products[typeInd].prices[productID]).toFixed(2))).replace('.', ',').split(',')[1]}</span>
                 </p>
             )}
 
-                <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5`}>
+                <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5 max-w-[900px]`}>
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>tamanhos</h1>
                     {products && (
                         <>
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
-                                priceProduct={String(products[0].prices[productID]).replace(',','.')}
+                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
+                                priceProduct={String(products[typeInd].prices[productID]).replace(',','.')}
                                 quantity={1}
                                 active={quantity == 1 ? true : false}
                                 onClick={() => selectQuantity(1)}
                             />
                             <ChoiceQuantityCard 
-                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 10).toFixed(2))}
+                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 10).toFixed(2))}
                                 quantity={10}
                                 active={quantity == 10 ? true : false}
                                 onClick={() => selectQuantity(10)}
                             />
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 15).toFixed(2))}
+                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 15).toFixed(2))}
                                 quantity={15}
                                 active={quantity == 15 ? true : false}
                                 onClick={() => selectQuantity(15)}
                             />
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 20).toFixed(2))}
+                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 20).toFixed(2))}
                                 quantity={20}
                                 active={quantity == 20 ? true : false}
                                 onClick={() => selectQuantity(20)}
                             />
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[0].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[0].prices[productID].replace(',','.')) * 50).toFixed(2))}
+                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 50).toFixed(2))}
                                 quantity={50}
                                 active={quantity == 50 ? true : false}
                                 onClick={() => selectQuantity(50)}
@@ -178,29 +195,30 @@ export default function Product() {
             <button
                 onClick={() => {
                     selectProduct(
-                        products[0].img[productID],
+                        products[typeInd].img[productID],
                         `${productSelected.name}`,
-                        `${String(Number(products[0].prices[productID]))}`,
-                        {materiais: products[0].type, colors: products[0].colors[productID]},
-                        products[0].type[productID]
+                        `${String(Number(products[typeInd].prices[productID]))}`,
+                        {materiais: products[typeInd].type, colors: products[typeInd].colors[productID]},
+                        products[typeInd].type[productID]
                         )
                     toggleProduct({
-                        img: products[0].img[productID],
+                        image: products[typeInd].img[productID],
+                        teste: 2,
                         name: `${productSelected.name}`,
-                        prices: `${String(Number(products[0].prices[productID]))}`,
-                        materials: {materiais: products[0].type, colors: products[0].colors[productID]},
+                        prices: `${String(Number(products[typeInd].prices[productID]))}`,
+                        materials: {materiais: products[typeInd].type, colors: products[typeInd].colors[productID]},
                         quantity: quantity,
-                        material: products[0].type[productID],
+                        material: products[typeInd].type[productID],
                     })
                 }}
-                className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold`}
+                className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold max-w-[900px]`}
             >
                 Personalize seu produto!
             </button>
             
-            <h1 className={`w-[80%] text-my-secondary my-4 font-inter font-bold capitalize text-[24px]`}>descrição</h1>
+            <h1 className={`w-[80%] text-my-secondary my-4 font-inter font-bold capitalize text-[24px] max-w-[900px]`}>descrição</h1>
 
-            <div className={`flex flex-col items-start justify-start w-[80%] bg-my-white p-4 rounded-[8px] mb-8`}>
+            <div className={`flex flex-col items-start justify-start w-[80%] bg-my-white p-4 rounded-[8px] mb-8 max-w-[900px]`}>
                 <p className={`mb-4`}>
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ullam deserunt exercitationem ipsa doloremque voluptatibus cumque, autem sit quibusdam voluptate, necessitatibus repellendus quam totam. Iure enim, a veniam sapiente alias praesentium.
                 </p>

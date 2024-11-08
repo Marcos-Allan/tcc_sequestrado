@@ -22,7 +22,7 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { toggleLoading, toggleUser }:any = useContext(GlobalContext);
+    const { toggleLoading, toggleUser, setCart }:any = useContext(GlobalContext);
 
     //UTILIZAÇÃO DO HOOK useState
     const [email, setEmail] = useState<string>('')
@@ -57,6 +57,9 @@ export default function SignIn() {
             toggleLoading(false)
 
             if(typeof response.data === 'object'){
+                //RETORNA A RESPOSTA DA REQUISIÇÃO PRO USUÁRIO
+                setCart(response.data.cart)
+
                 //CHAMA O MODAL DE SUCESSO
                 notifySucess(`Bem vindo novamente ${response.data.name}`)
 

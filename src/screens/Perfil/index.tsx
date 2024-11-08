@@ -26,12 +26,12 @@ export default function Perfil() {
         if(user.logged == false) {
             navigate('/sign-in')
         }
-    },[user])
+    },[user.logged])
 
     return(
-        <div className={`w-screen h-screen bg-my-gray font-inter max-w-[500px] mx-auto`}>
+        <div className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}>
             <Header />
-            <div className='w-full px-2 py-5'>
+            <div className='w-full px-2 py-5 max-w-[900px]'>
                 <p>Nome do usuário: <span className={`font-bold`}>{user.name}</span></p>
                 <p>Email do usuário: <span className={`font-bold`}>{user.email}</span></p>
                 <p className={`font-bold`}>Histórico de compras do usuário:</p>
@@ -47,7 +47,6 @@ export default function Perfil() {
                         </div>
                     </div>
                 ))}
-
             </div>
             <Footer />
             <ModalCart />

@@ -32,7 +32,7 @@ export default function EditProductCart() {
 
     //VARIÁVEIS IMUTÁVEIS
     const myName:any = productSelectedEdit.name
-    const myPrice:any = productSelectedEdit.price
+    const [myPrice, setMyPrice] = useState<any>(productSelectedEdit.price)
     
     //UTILIZAÇÃO DO HOOK useState
     const [myEstampa, setMyEstampa] = useState<any>(productSelectedEdit.print)
@@ -41,11 +41,28 @@ export default function EditProductCart() {
     const [mySize, setMySize] = useState<any>(productSelectedEdit.size)
     const [productID, setProductID] = useState<number>(0)
     const [img, setImg] = useState<string>('')
+    const [image, setImage] = useState<any>('')
 
     //ARRAY DE POSSIBILIDADES DAS PROPS DO PRODUTOS
-    const sizes = productSelectedEdit.types
-    const materiais = ['porcelana', 'plástica', 'mágica', 'de colher']
+    const [sizes, setSizes] = useState<any>(productSelectedEdit.types)
+    const [materiais, setMateriais] = useState<any>()
+    
     const [products, setProducts] = useState<any>()
+    const [typeInd, setTypeInd] = useState<number>(0)
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
+    useEffect(() => {
+        console.log(productSelectedEdit.name)
+        if(productSelectedEdit.name == "Caneca"){
+            setTypeInd(0)
+            setMateriais(['porcelana', 'plástica', 'mágica', 'de colher'])
+            setSizes(productSelectedEdit.types)
+        }else{
+            setTypeInd(1)
+            setMateriais(['poliester'])
+            setSizes(['pp', 'p', 'm', 'g', 'xg', 'xg'])
+        }
+    },[productSelectedEdit])
 
     //FUNÇÃO RESPONSÁVEL POR REMOVER ITEM DO CARRINHO
     function removeItem() {
@@ -143,6 +160,8 @@ export default function EditProductCart() {
         setMyMaterial(productSelectedEdit.material)
         setMyQuantity(productSelectedEdit.quantity)
         setMySize(productSelectedEdit.size)
+        setImage(productSelectedEdit.image)
+        // setImage(products[typeInd].img[materiais.indexOf(productSelectedEdit.material)])
     },[productSelectedEdit])
 
     const handleSize = () => {
@@ -165,6 +184,10 @@ export default function EditProductCart() {
     
         // Atualiza o estado com o próximo material e define o productID
         setMyMaterial(materiais[nextIndex]);
+
+        setMyPrice(products[typeInd].prices[nextIndex])
+
+        setImage(products[typeInd].img[nextIndex])
 
         //ATUALIZA O INDICE DO PRODUTO
         setProductID(nextIndex);
@@ -216,7 +239,7 @@ export default function EditProductCart() {
                     itemId: productSelectedEdit.id,
                     novosDados: {
                         id: productSelectedEdit.id,
-                        image:  products[0].img[productID],
+                        image:  products[typeInd].img[productID],
                         material: myMaterial,
                         name: myName,
                         price: myPrice,
@@ -269,7 +292,7 @@ export default function EditProductCart() {
                                     itemId: productSelectedEdit.id,
                                     novosDados: {
                                         id: productSelectedEdit.id,
-                                        image:  products[0].img[productID],
+                                        image:  products[typeInd].img[productID],
                                         material: myMaterial,
                                         name: myName,
                                         price: myPrice,
@@ -321,10 +344,10 @@ export default function EditProductCart() {
 
     return(
         <div className={`overflow-x-hidden`}>
-            <div className={`w-screen min-h-screen bg-my-white overflow-x-hidden px-10 sm:px-5 flex flex-col items-center relative`}>
+            <div className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}>
                 <Header />
                 <div className={`p-3 w-[80%] bg-my-gray flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
-                    <img src={products && products[0].img[productID]} className={`w-full`} />
+                    <img src={image} className={`w-full`} />
                 </div>
                 <p className={`underline text-my-secondary font-bold text-[24px] my-4 max-w-[700px]`}>{myName}</p>
                 
@@ -377,7 +400,7 @@ export default function EditProductCart() {
                         handleUpload()
                     }}
                     className={`text-my-white font-bold bg-my-secondary rounded-[8px] mt-3 mb-5 text-[18px] px-5 py-2`}
-                >Voltar ao carrinho</button>
+                >Atualizar</button>
                 
                 <button
                     onClick={() => {

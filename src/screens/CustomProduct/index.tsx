@@ -33,6 +33,17 @@ export default function CustomProduct() {
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, addToCart, user }:any = useContext(GlobalContext);
 
+    const [typeInd, setTypeInd] = useState<number>(0)
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
+    useEffect(() => {
+        if(productSelected.name == "Caneca"){
+            setTypeInd(0)
+        }else{
+            setTypeInd(1)
+        }
+    },[])
+
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         console.log(productSelected)
@@ -86,7 +97,7 @@ export default function CustomProduct() {
     useEffect(() => {
         //VERIFICA SE JÁ TEM PRODUTOS CADASTRADOS
         if(products){
-            setColor(products[0].colors[productID][0])
+            setColor(products[typeInd].colors[productID][0])
         }
     },[productID])
 
@@ -161,6 +172,9 @@ export default function CustomProduct() {
 
      // FUNÇÃO RESPONSÁVEL POR DAR UPLOAD NA IMAGEM
      async function handleUpload() {
+
+        console.log()
+        
         //CRIA UMA PROMISSE 
         return new Promise((resolve, reject) => {
             //PEGA O ARQUIVO QUE FOI SELECIONADO
@@ -215,8 +229,8 @@ export default function CustomProduct() {
                                     size: size,
                                     material: productSelected.material,
                                     color: color,
-                                    colors: products[0].colors[productID],
-                                    types: products[0].type
+                                    colors: products[typeInd].colors[productID],
+                                    types: products[typeInd].type
                                 })
 
                                 //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
@@ -232,8 +246,8 @@ export default function CustomProduct() {
                                         size: size,
                                         material: productSelected.material,
                                         color: color,
-                                        colors: products[0].colors[productID],
-                                        types: products[0].type
+                                        colors: products[typeInd].colors[productID],
+                                        types: products[typeInd].type
                                     }
                                 })
                                 .then(function (response) {
@@ -269,9 +283,10 @@ export default function CustomProduct() {
     const notifySucess = (message:string) => toast.success(message);
 
     return(
-        <div className={`w-screen h-screen flex flex-col items-center justify-start max-w-[500px] mx-auto`}>
+        <div className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
+        >
             <Header />
-            <div className={`bg-my-gray w-[95%] flex flex-col items-center justify-start rounded-[12px]`}>
+            <div className={`bg-my-gray w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
                 <h1 className={`mt-5 text-[20px] font-bold text-my-secondary`}>Vamos criar sua {productSelected && productSelected.name}</h1>
                 
                 <div className={`mt-3 mb-5 w-[80%] h-[3px] bg-my-secondary`}></div>
@@ -323,7 +338,7 @@ export default function CustomProduct() {
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-start gap-4 mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary`}>Selecione a cor</h1>
 
-                    {products && products[0].colors[productID].map((materialColor:string) => (
+                    {products && products[typeInd].colors[productID].map((materialColor:string) => (
                         <div
                             onClick={() => setColor(materialColor)}
                             style={{ backgroundColor: materialColor }}
@@ -333,10 +348,9 @@ export default function CustomProduct() {
 
                     ))}
                 </div>
-
                 
             </div>
-            <div className={`my-5 w-[90%] bg-my-gray p-4 font-bold rounded-[8px]`}>
+            <div className={`my-5 w-[90%] bg-my-gray p-4 font-bold rounded-[8px] max-w-[900px]`}>
                 {products && (
                     <p className={`text-my-secondary text-[24px]`}>Valor <span className={`text-my-primary`}>R${String(Number(Number(productSelected.prices.replace(',','.')) * productSelected.quantity).toFixed(2)).replace('.', ',')}</span></p>
                 )}
@@ -348,7 +362,7 @@ export default function CustomProduct() {
                     
                     handleUpload()
                 }}
-                className={`${btnActive == true ? 'bg-my-primary' : 'bg-my-gray'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold`}
+                className={`${btnActive == true ? 'bg-my-primary' : 'bg-my-gray'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold max-w-[900px]`}
             >
                 Adicionar ao carrinho
             </button>
