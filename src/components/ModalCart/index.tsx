@@ -48,10 +48,15 @@ export default function ModalCart() {
                         />
 
                         <div className={`w-full min-h-[170px] overflow-y-scroll flex items-center justify-start flex-col overflow-x-hidden pt-[20px]`}>
-                            {cart.map((item:any) => (
+                            
+                            {cart != undefined && cart.map((item:any) => (
                                 <div className={`w-[85%] bg-[#efefef] h-[80px] rounded-[8px] flex flex-row items-center justify-between mb-4 relative px-3`}>
                                     <div className={`absolute top-[-8px] left-[-8px] text-[12px] text-my-white bg-my-secondary rounded-[50%] w-[20px] text-center flex items-center justify-center h-[20px]`}>{item.quantity}</div>
-                                    <img src={item.estampa} alt="" className={`w-[70px]`} />
+                                    
+                                    {item.estampa && (
+                                        <img src={item.estampa} alt="" className={`w-[70px]`} />
+                                    )}
+                                    
                                     <div className={`flex-grow-[1] flex flex-row items-center justify-between`}>
                                         <img src={item.image} alt="" className={`w-[80px] h-[80px]`} />
                                         <div>

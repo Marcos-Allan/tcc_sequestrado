@@ -22,7 +22,7 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { toggleLoading, toggleUser, setCart }:any = useContext(GlobalContext);
+    const { toggleLoading, toggleUser }:any = useContext(GlobalContext);
 
     //UTILIZAÇÃO DO HOOK useState
     const [email, setEmail] = useState<string>('')
@@ -51,14 +51,12 @@ export default function SignIn() {
             console.log('rd'+response.data)
 
             //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
-            toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, true)
+            toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, response.data.cart, true)
 
             //MUDA O ESTADO DA APLICAÇÃO PARA false
             toggleLoading(false)
 
             if(typeof response.data === 'object'){
-                //RETORNA A RESPOSTA DA REQUISIÇÃO PRO USUÁRIO
-                setCart(response.data.cart)
 
                 //CHAMA O MODAL DE SUCESSO
                 notifySucess(`Bem vindo novamente ${response.data.name}`)

@@ -31,7 +31,7 @@ export default function CustomProduct() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelected, addToCart, user }:any = useContext(GlobalContext);
+    const { productSelected, toggleUser, setCart, user }:any = useContext(GlobalContext);
 
     const [typeInd, setTypeInd] = useState<number>(0)
 
@@ -172,8 +172,6 @@ export default function CustomProduct() {
 
      // FUNÇÃO RESPONSÁVEL POR DAR UPLOAD NA IMAGEM
      async function handleUpload() {
-
-        console.log()
         
         //CRIA UMA PROMISSE 
         return new Promise((resolve, reject) => {
@@ -184,6 +182,38 @@ export default function CustomProduct() {
             if (!file) {
                 //RESOLVE A PROMEISSE PASSANDO A IMAGEM COMO PARÂMETRO
                 resolve(img);
+
+                //GERA UM ID ALEATÓRIO
+                const id = Math.floor(Math.random() * 99999)
+
+                //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
+                axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
+                    userId: user.id,
+                    produto: {
+                        id: id,
+                        image: productSelected.image,
+                        name: productSelected.name,
+                        price: Number(productSelected.prices),
+                        quantity: productSelected.quantity,
+                        estampa: '',
+                        size: size,
+                        material: productSelected.material,
+                        color: color,
+                        colors: products[typeInd].colors[productID],
+                        types: products[typeInd].type
+                    }
+                })
+                .then(function (response) {
+                    //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
+                    console.log(response.data)
+
+                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                    setCart(response.data.cart)
+                    // id:any, name:string, email:string, history:any, cart:any, logged:boolean)
+                })
+                .catch(function (error) {
+                    console.log('erro: ', error)
+                })
             } else {
                 const storageRef = ref(storage, `images/estampas/${String(Math.floor(Math.random() * 99999999999999))}`);
                 const uploadTask = uploadBytesResumable(storageRef, file);
@@ -219,19 +249,19 @@ export default function CustomProduct() {
                                 const id = Math.floor(Math.random() * 99999)
 
                                 //ADICIONA ITEM AO CARRINHO
-                                addToCart({
-                                    id: id,
-                                    image: productSelected.image,
-                                    name: productSelected.name,
-                                    price: Number(productSelected.prices),
-                                    quantity: productSelected.quantity,
-                                    estampa: url,
-                                    size: size,
-                                    material: productSelected.material,
-                                    color: color,
-                                    colors: products[typeInd].colors[productID],
-                                    types: products[typeInd].type
-                                })
+                                // addToCart({
+                                //     id: id,
+                                //     image: productSelected.image,
+                                //     name: productSelected.name,
+                                //     price: Number(productSelected.prices),
+                                //     quantity: productSelected.quantity,
+                                //     estampa: url,
+                                //     size: size,
+                                //     material: productSelected.material,
+                                //     color: color,
+                                //     colors: products[typeInd].colors[productID],
+                                //     types: products[typeInd].type
+                                // })
 
                                 //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
                                 axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
@@ -253,6 +283,10 @@ export default function CustomProduct() {
                                 .then(function (response) {
                                     //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
                                     console.log(response.data)
+
+                                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                                    setCart(response.data.cart)
+                                    // id:any, name:string, email:string, history:any, cart:any, logged:boolean)
                                 })
                                 .catch(function (error) {
                                     console.log('erro: ', error)

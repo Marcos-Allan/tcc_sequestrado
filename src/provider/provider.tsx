@@ -23,11 +23,16 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     );
     const [openCart, setOpenCart] = useState<boolean>(false)
     const [openPerfil, setOpenPerfil] = useState<boolean>(false)
+
     const [productSelected, setProductSelected] = useState<any>(localStorage.getItem('productPU') !== null
-        ? JSON.parse(localStorage.getItem('productPU')as any)
+        ? JSON.parse(localStorage.getItem('productPU') as any)
         : { image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p'] })
+
     const [productSelectedEdit, setProductSelectedEdit] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p']  })
-    const [cart, setCart] = useState<any[]>([]);
+    const [cart, setCart] = useState<any[]>(userLS !== null
+        ? JSON.parse(userLS).cart
+        : []
+    );
     const [loading, setLoading] = useState<boolean>(false);
     const [logoutModal, setLogoutModal] = useState<boolean>(false);
     const [finishBuy, setFinishBuy] = useState<boolean>(false);
@@ -56,6 +61,9 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         }else {
             //COLOCA O ITEM NO CARRINHO MAIS NA QUANTIDADE DO PRODUTO
             setCart([...cart, { ...newItem, quantity: newItem.quantity }]);
+
+            //SALVA OS DADOS DO USUÁRIO NO localStorage
+            localStorage.setItem('userculturalPassport', JSON.stringify({ id: user.id, name: user.name, email: user.email, history: user.history, cart: [...cart, { ...newItem, quantity: newItem.quantity }], logged: true }))
         }
     }
 
@@ -65,12 +73,15 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     //FUNÇÃO RESPONSÁVEL POR ATUALIZAR OS DADOS DO USUÁRIO
-    function toggleUser(id:any, name:string, email:string, history:any, logged:boolean) {
+    function toggleUser(id:any, name:string, email:string, history:any, cart:any, logged:boolean) {
         //SALVA OS DADOS DO USUÁRIO NO localStorage
-        localStorage.setItem('userculturalPassport', JSON.stringify({ id: id, name: name, email: email, history: history, logged: logged }))
+        localStorage.setItem('userculturalPassport', JSON.stringify({ id: id, name: name, email: email, history: history, cart: cart, logged: logged }))
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
         setUser({ id: id, name: name, email: email, history: history, logged: logged })
+
+        //PEGA O CARRINHO DO USUÁRIO
+        setCart(cart)
     }
 
     //FUNÇÃO RESPONSÁVEL POR COLOCAR O MODAL NA TELA
@@ -81,8 +92,10 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
         setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", history: [
             { data: '9/10/2024', name: 'Caneca Porcelana', img: 'undefined', price: 19.90, quantity: 2, estampa: '', },
-            { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', }
-        ],  })
+            { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', },
+        ] })
+
+        setCart([])
     }
 
     //FUNÇÃO RESPONSÁVEL POR ATUALIZAR O CARRRINHO NO FRONTEND

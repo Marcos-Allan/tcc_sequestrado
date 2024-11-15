@@ -44,7 +44,7 @@ export default function EditProductCart() {
     const [image, setImage] = useState<any>('')
 
     //ARRAY DE POSSIBILIDADES DAS PROPS DO PRODUTOS
-    const [sizes, setSizes] = useState<any>(productSelectedEdit.types)
+    const [sizes, setSizes] = useState<any>([productSelectedEdit.types])
     const [materiais, setMateriais] = useState<any>()
     
     const [products, setProducts] = useState<any>()
@@ -60,7 +60,7 @@ export default function EditProductCart() {
         }else{
             setTypeInd(1)
             setMateriais(['poliester'])
-            setSizes(['pp', 'p', 'm', 'g', 'xg', 'xg'])
+            setSizes(['pp', 'p', 'm', 'g', 'gg', 'xg'])
         }
     },[productSelectedEdit])
 
@@ -165,15 +165,23 @@ export default function EditProductCart() {
     },[productSelectedEdit])
 
     const handleSize = () => {
-        // Obtém o índice atual da escolha
-        const currentIndex = sizes.indexOf(mySize)
-        
-        // Calcula o próximo índice (volta ao início se for o último)
-        const nextIndex = (currentIndex + 1) % sizes.length
-        
-        // Atualiza o estado com o próximo valor de escolha
-        setMySize(sizes[nextIndex])
-    }
+        // Verifica se o array 'sizes' não está vazio
+        if (sizes.length === 0) {
+            console.error("O array de tamanhos está vazio!");
+            return;
+        }
+    
+        // Obtém o índice atual de 'mySize' no array 'sizes'
+        const currentIndex = sizes.indexOf(mySize);
+    
+        // Se o índice atual for inválido (-1), define o próximo como o primeiro
+        const nextIndex = currentIndex === -1 || currentIndex === sizes.length - 1
+            ? 0 // Volta para o primeiro índice
+            : currentIndex + 1;
+    
+        // Atualiza o estado para o próximo tamanho
+        setMySize(sizes[nextIndex]);
+    };
     
     const handleMaterial = () => {
         // Obtém o índice atual da escolha
@@ -352,20 +360,26 @@ export default function EditProductCart() {
                 <p className={`underline text-my-secondary font-bold text-[24px] my-4 max-w-[700px]`}>{myName}</p>
                 
                 <div className={`w-[80%] flex flex-row justify-between mt-4 max-w-[700px]`}>
-                    <label htmlFor="estampa" className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col`}>
-                        <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>estampa</p>
-                        <img src={myEstampa} alt="" />
+                    
+                    <label htmlFor="estampa" className={`${productSelectedEdit.name !== 'Camiseta' ? 'w-[100%]' : 'w-[47%]'} bg-my-white p-3 rounded-[8px] flex items-center flex-col relative`}>
+                        <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center mb-1`}>estampa</p>
+                        <img src={myEstampa} alt="" className='mt-2 min-w-full' />
                     </label>
 
                     <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
 
-                    <div
-                        onClick={() => handleSize()}
-                        className={`w-[47%] bg-my-white p-3 rounded-[8px] flex flex-col max-w-[700px]`}
-                    >
-                        <p className={`capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
-                        <p className={`text-center text-my-secondary text-[34px] uppercase font-bold`}>{mySize}</p>
-                    </div>
+                    {productSelectedEdit.name == 'Camiseta' && (
+                        <div
+                            onClick={() => {
+                                console.log('trocando')
+                                handleSize()
+                            }}
+                            className={`w-[47%] bg-my-white p-3 items-center justify-center rounded-[8px] flex flex-col max-w-[700px] relative`}
+                        >
+                            <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
+                            <p className={`text-center text-my-secondary text-[34px] uppercase font-bold`}>{mySize}</p>
+                        </div>
+                    )}
                 </div>
 
                 <div

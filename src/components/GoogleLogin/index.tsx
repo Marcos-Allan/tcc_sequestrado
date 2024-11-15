@@ -18,7 +18,7 @@ export default function GoogleLogin() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { toggleLoading, toggleUser, setCart }:any = useContext(GlobalContext);
+    const { toggleLoading, toggleUser }:any = useContext(GlobalContext);
 
     //FUNÇÃO RESPONSÁVEL POR FAZER LOGIN
     function signIn(email:string, name:string) {
@@ -32,11 +32,8 @@ export default function GoogleLogin() {
                 //CHAMA O MODAL DE SUCESSO
                 notifySucess(`${response.data.message} ${response.data.person.name}`)
 
-                //RETORNA A RESPOSTA DA REQUISIÇÃO PRO USUÁRIO
-                setCart(response.data.person.cart)
-
                 //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
-                toggleUser(response.data.person._id, response.data.person.name, response.data.person.email, response.data.person.historico_pedido, true)
+                toggleUser(response.data.person._id, response.data.person.name, response.data.person.email, response.data.person.historico_pedido, response.data.person.cart, true)
 
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/principal')
