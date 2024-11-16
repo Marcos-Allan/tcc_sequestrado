@@ -11,17 +11,18 @@ import ModalUser from '../../components/ModalUser';
 import ModalCart from '../../components/ModalCart';
 import ChoiceSizeCard from '../../components/ChoiceSizeCard';
 import ModalLogout from '../../components/ModalLogout';
+import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
+
 
 //IMPORTAÇÃO DOS ICONES
 import { AiFillPicture, AiFillFileImage } from "react-icons/ai"
 
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
 import { storage } from '../../utils/firebase';
-import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 export default function CustomProduct() {
     //FAZ REFERENCIA A UM ELEMENTO
@@ -33,20 +34,67 @@ export default function CustomProduct() {
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, toggleUser, setCart, user }:any = useContext(GlobalContext);
 
+    //UTILIZAÇÃO DO HOOK useState
     const [typeInd, setTypeInd] = useState<number>(0)
+    const [arrayEstampas, setArrayEstampas] = useState<string[]>([])
+    const [indPreEstampa, setIndPreEstampa] = useState<number>(0)
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
     useEffect(() => {
         if(productSelected.name == "Caneca"){
             setTypeInd(0)
-        }else{
+        }else if(productSelected.name == "Camiseta"){
             setTypeInd(1)
+        }else if(productSelected.name == "Almofada"){
+            setTypeInd(2)
+        }else if(productSelected.name == "Caderno"){
+            setTypeInd(3)
+        }else if(productSelected.name == "Agenda"){
+            setTypeInd(4)
+        }else if(productSelected.name == "Azulejo"){
+            setTypeInd(5)
+        }else if(productSelected.name == "Almochaveiro"){
+            setTypeInd(6)
         }
     },[])
+
+    //FUNÇÃO RESPONSÁVEL POR LISTAR OS AVATARES
+    const fetchImages = async () => {
+        //FAZ UMA REFERÊNCIA AO LOCAL DE AVATARES SALVOS NA NUVEM
+        const storageRef = ref(storage, '/images/pre-estampas');
+        // const storageRef = ref(storage, '/images/icons-achievements');
+
+        try {
+            //PEGA AS IMAGENS DENTRO DA PASTA ESPECIFICADA
+            const result = await listAll(storageRef);
+
+            //PEGA A URL DOS AVATARES
+            const urlPromises = result.items.map((imageRef:any) => getDownloadURL(imageRef));
+            
+            //ESPERA TODOS OS AVATARES SEREM 
+            const urls = await Promise.all(urlPromises);
+            
+            //COLOCA AS ESTAMPAS NO ARRAY DE ESTAMPAS
+            setArrayEstampas(urls)
+        } catch (error) {
+            console.error('Erro ao listar imagens:', error);
+        }
+    };
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        if(user.logged == false) {
+            navigate('/sign-in')
+        }
+    },[user])
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         console.log(productSelected)
+
+        //CHAMA A FUNÇÃO QUE PEGA AS IMAGENS DAS ESTAMPAS
+        fetchImages()
+
         //VERIFICA SE TEM ITEM ESCOLHIDO
         if(productSelected.name == 'undefined') {
             //NAVEGA PARA A PÁGINA INICIAL
@@ -195,7 +243,7 @@ export default function CustomProduct() {
                         name: productSelected.name,
                         price: Number(productSelected.prices),
                         quantity: productSelected.quantity,
-                        estampa: '',
+                        estampa: imgURL,
                         size: size,
                         material: productSelected.material,
                         color: color,
@@ -341,7 +389,7 @@ export default function CustomProduct() {
 
                     <button
                         onClick={() => {
-                            setImgURL('imagens')
+                            setImgURL(arrayEstampas[indPreEstampa])
                             setPrint('other')
                         }}
                         className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
@@ -352,7 +400,27 @@ export default function CustomProduct() {
 
                     {imgURL !== undefined && (
                         <div className={`w-full flex items-center justify-center my-4`}>
+                            {print == 'other' && (
+                                <p onClick={() => {
+                                    if(indPreEstampa == 0){
+                                        setIndPreEstampa(arrayEstampas.length - 1)
+                                    }else{
+                                        setIndPreEstampa(indPreEstampa - 1)
+                                    }
+                                    setImgURL(arrayEstampas[indPreEstampa])
+                                }}>menos</p>
+                                )}
                             <img src={imgURL} alt="" className={`w-[200px] h-[150px]`} />
+                            {print == 'other' && (
+                                <p onClick={() => {
+                                    if(indPreEstampa == Number(arrayEstampas.length - 1)){
+                                        setIndPreEstampa(0)
+                                    }else{
+                                        setIndPreEstampa(indPreEstampa + 1)
+                                    }
+                                    setImgURL(arrayEstampas[indPreEstampa])
+                            }}>mais</p>
+                            )}
                         </div>
                     )}
                 </div>

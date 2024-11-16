@@ -23,7 +23,7 @@ export default function Product() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelected, setProductSelected, toggleProduct }:any = useContext(GlobalContext);
+    const { productSelected, setProductSelected, toggleProduct, user }:any = useContext(GlobalContext);
 
     //UTILIZAÇÃO DO HOOK useState
     const [products, setProducts] = useState<any>()
@@ -31,13 +31,104 @@ export default function Product() {
     const [quantity, setQuantity] = useState<number>(1)
     const [typeInd, setTypeInd] = useState<number>(0)
     const [modalQuantity, setModalQuantity] = useState<boolean>(false)
+    const descriptions = [
+        {
+            //CANECA
+            material: 'Cerâmica de alta qualidade, resistente a micro-ondas e lava-louças.',
+            customArea: 'Área externa da caneca.',
+            optionsCustom: {
+                sizes: 'Porcelana, plástico, mágica, colher',
+                colors: 'Preto/vermelho(Mágica) Vermelho/Azul(Colher)'
+            }
+        },
+        {
+            //CAMISA
+            material: 'Tecido 100% poliéster, macio e confortável.',
+            customArea: 'Frente da camisa tamanho A4',
+            optionsCustom: {
+                sizes: 'Tamanhos: P, M, G, GG',
+                colors: 'Branco, Preto, Verde, Vermelho, Azul, Amarelo'
+            }
+        },
+        {
+            //ALMOFADA
+            material: 'Tecido macio e enchimento de fibra siliconada antialérgica.',
+            customArea: 'Frente da almofada.',
+            optionsCustom: {
+                sizes: '',
+                colors: ''
+            }
+        },
+        {
+            //CADERNO
+            material: '',
+            customArea: '',
+            optionsCustom: {
+                sizes: '',
+                colors: ''
+            }
+        },
+        {
+            //AZULEJO
+            material: '',
+            customArea: '',
+            optionsCustom: {
+                sizes: '',
+                colors: ''
+            }
+        },
+        {
+            //AGENDA
+            material: 'Capa dura, 50 folhas, 17x9,4 centimetros',
+            customArea: 'Capa e contra capa',
+            optionsCustom: {
+                sizes: '17x9,4cm',
+                colors: ''
+            }
+        },
+        {
+            //AGENDA
+            material: '',
+            customArea: '',
+            optionsCustom: {
+                sizes: '',
+                colors: ''
+            }
+        },
+        {
+            //CHAVEIRO
+            material: 'Tecido macio e enchimento de fibra siliconada antialérgica',
+            customArea: 'Frente e verso da almofada',
+            optionsCustom: {
+                sizes: '',
+                colors: ''
+            }
+        }
+    ]
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        if(user.logged == false) {
+            navigate('/sign-in')
+        }
+    },[user])
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
     useEffect(() => {
         if(productSelected.name == "Caneca"){
             setTypeInd(0)
-        }else{
+        }else if(productSelected.name == "Camiseta"){
             setTypeInd(1)
+        }else if(productSelected.name == "Almofada"){
+            setTypeInd(2)
+        }else if(productSelected.name == "Caderno"){
+            setTypeInd(3)
+        }else if(productSelected.name == "Agenda"){
+            setTypeInd(4)
+        }else if(productSelected.name == "Azulejo"){
+            setTypeInd(5)
+        }else if(productSelected.name == "Almochaveiro"){
+            setTypeInd(6)
         }
     },[])
 
@@ -219,21 +310,19 @@ export default function Product() {
             <h1 className={`w-[80%] text-my-secondary my-4 font-inter font-bold capitalize text-[24px] max-w-[900px]`}>descrição</h1>
 
             <div className={`flex flex-col items-start justify-start w-[80%] bg-my-white p-4 rounded-[8px] mb-8 max-w-[900px]`}>
-                <p className={`mb-4`}>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ullam deserunt exercitationem ipsa doloremque voluptatibus cumque, autem sit quibusdam voluptate, necessitatibus repellendus quam totam. Iure enim, a veniam sapiente alias praesentium.
-                </p>
-                <h2 className={`font-inter font-bold text-my-secondary text-[18px]`}>Materiais</h2>
-                <ul className={`list-disc list-inside`}>
-                    <li>1</li>
-                    <li>2</li>
-                    <li>3</li>
-                </ul>
-                <h2 className={`font-inter font-bold text-my-secondary text-[18px]`}>Feitis</h2>
-                <ul className={`list-disc list-inside`}>
-                    <li>1</li>
-                    <li>2</li>
-                    <li>3</li>
-                </ul>
+                <>
+                    <p className={`mt-4 font-bold`}>Material:</p>
+                    <p>{descriptions[typeInd].material}</p>
+                    
+                    <p className={`mt-4 font-bold`}>Àrea de customização:</p>
+                    <p>{descriptions[typeInd].customArea}</p>
+                    
+                    <p className={`mt-4 font-bold`}>Opções de configuração:</p>
+                    <ul className={`list-disc list-inside pl-4`}>
+                        {descriptions[typeInd].optionsCustom.sizes !== "" && <li>{descriptions[typeInd].optionsCustom.sizes}</li>}
+                        {descriptions[typeInd].optionsCustom.colors !== "" && <li>{descriptions[typeInd].optionsCustom.colors}</li>}
+                    </ul>
+                </>
             </div>
             <Footer />
             <ModalUser />

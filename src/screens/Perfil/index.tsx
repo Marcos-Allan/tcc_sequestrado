@@ -22,11 +22,10 @@ export default function Perfil() {
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
-        console.log(user.logged)
         if(user.logged == false) {
             navigate('/sign-in')
         }
-    },[user.logged])
+    },[user])
 
     return(
         <div className={`bg-my-gray w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}>

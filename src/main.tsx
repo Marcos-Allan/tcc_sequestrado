@@ -16,6 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //IMPORTAÇÃO DAS PÁGINAS
+import Home from './screens/Home';
 import SignIn from './screens/SignIn'
 import SignUp from './screens/SignUp'
 import Principal from './screens/Principal'
@@ -29,6 +30,10 @@ import { GlobalProvider } from './provider/provider';
 
 //CRIAÇÃO DAS ROTAS PÁGINAS
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
   {
     path: "/sign-in",
     element: <SignIn />,

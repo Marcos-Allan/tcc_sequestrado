@@ -90,7 +90,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.removeItem('userculturalPassport')
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
-        setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", history: [
+        setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", logged: false, history: [
             { data: '9/10/2024', name: 'Caneca Porcelana', img: 'undefined', price: 19.90, quantity: 2, estampa: '', },
             { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', },
         ] })

@@ -6,6 +6,7 @@ import ModalCart from "../../components/ModalCart"
 import ModalUser from "../../components/ModalUser"
 import Carousel from "../../components/Carrosel"
 import ModalLogout from "../../components/ModalLogout"
+import ModalFinishBuy from "../../components/ModalFinishBuy"
 
 //IMPORTAÇÃO DAS IMAGENS
 import img from '../../../public/carrossell1.jpg'
@@ -28,7 +29,6 @@ import { useNavigate } from 'react-router-dom'
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
-import ModalFinishBuy from "../../components/ModalFinishBuy"
 
 export default function Principal() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
@@ -65,6 +65,13 @@ export default function Principal() {
             console.error('Erro ao listar imagens:', error);
         }
     };
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        if(user.logged == false) {
+            navigate('/sign-in')
+        }
+    },[user])
     
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -91,28 +98,28 @@ export default function Principal() {
             <div className="flex items-start justify-center flex-wrap py-4 w-[80%] relative max-w-[900px]">
 
                 <ProductCard
-                    image={camisa}
-                    name={'Camiseta'}
-                    price={'39,90'}
-                    onClick={() => selectProduct(camisa, 'Camiseta', '39,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
                     image={caneca}
                     name={'Caneca'}
                     price={'29,90'}
                     onClick={() => selectProduct(caneca, 'Caneca', '29,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
-                    image={caderno}
-                    name={'Caderno'}
-                    price={'19,90'}
-                    onClick={() => selectProduct(caderno, 'Caderno', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
+                    image={camisa}
+                    name={'Camiseta'}
+                    price={'39,90'}
+                    onClick={() => selectProduct(camisa, 'Camiseta', '39,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={almofada}
                     name={'Almofada'}
                     price={'19,90'}
                     onClick={() => selectProduct(almofada, 'Almofada', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
+                />
+                <ProductCard
+                    image={caderno}
+                    name={'Caderno'}
+                    price={'19,90'}
+                    onClick={() => selectProduct(caderno, 'Caderno', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
                 />
                 <ProductCard
                     image={agenda}

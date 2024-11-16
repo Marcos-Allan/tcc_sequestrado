@@ -51,16 +51,63 @@ export default function EditProductCart() {
     const [typeInd, setTypeInd] = useState<number>(0)
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
+    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
+    // useEffect(() => {
+    //     if(productSelected.name == "Caneca"){
+    //         setTypeInd(0)
+    //     }else if(productSelected.name == "Camiseta"){
+    //         setTypeInd(1)
+    //     }else if(productSelected.name == "Almofada"){
+    //         setTypeInd(2)
+    //     }else if(productSelected.name == "Caderno"){
+    //         setTypeInd(3)
+    //     }else if(productSelected.name == "Agenda"){
+    //         setTypeInd(4)
+    //     }else if(productSelected.name == "Azulejo"){
+    //         setTypeInd(5)
+    //     }else if(productSelected.name == "Almochaveiro"){
+    //         setTypeInd(6)
+    //     }
+    // },[])
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
+    useEffect(() => {
+        if(user.logged == false) {
+            navigate('/sign-in')
+        }
+    },[user])
+
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         console.log(productSelectedEdit.name)
         if(productSelectedEdit.name == "Caneca"){
             setTypeInd(0)
             setMateriais(['porcelana', 'plástica', 'mágica', 'de colher'])
             setSizes(productSelectedEdit.types)
-        }else{
+        }else if(productSelectedEdit.name == "Camiseta"){
             setTypeInd(1)
             setMateriais(['poliester'])
             setSizes(['pp', 'p', 'm', 'g', 'gg', 'xg'])
+        }else if(productSelectedEdit.name == "Almofada"){
+            setTypeInd(2)
+            setMateriais(['dois lados 28x20cm', 'dois lados 40x28cm', 'cubo 15x15cm', 'cubo 20x20cm'])
+            setSizes(['pp'])
+        }else if(productSelectedEdit.name == "Caderno"){
+            setTypeInd(3)
+            setMateriais(['A4'])
+            setSizes(['pp'])
+        }else if(productSelectedEdit.name == "Agenda"){
+            setTypeInd(4)
+            setMateriais(['17x9,4cm'])
+            setSizes(['pp'])
+        }else if(productSelectedEdit.name == "Azulejo"){
+            setTypeInd(5)
+            setMateriais(['15x15cm', '10x10cm'])
+            setSizes(['pp'])
+        }else if(productSelectedEdit.name == "Almochaveiro"){
+            setTypeInd(6)
+            setMateriais(['7x7cm'])
+            setSizes(['pp'])
         }
     },[productSelectedEdit])
 
