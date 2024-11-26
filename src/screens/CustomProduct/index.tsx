@@ -16,9 +16,9 @@ import ModalFinishBuy from '../../components/ModalFinishBuy';
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
 
-
 //IMPORTAÇÃO DOS ICONES
 import { AiFillPicture, AiFillFileImage } from "react-icons/ai"
+import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
 import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
@@ -401,25 +401,31 @@ export default function CustomProduct() {
                     {imgURL !== undefined && (
                         <div className={`w-full flex items-center justify-center my-4`}>
                             {print == 'other' && (
-                                <p onClick={() => {
-                                    if(indPreEstampa == 0){
-                                        setIndPreEstampa(arrayEstampas.length - 1)
-                                    }else{
-                                        setIndPreEstampa(indPreEstampa - 1)
-                                    }
-                                    setImgURL(arrayEstampas[indPreEstampa])
-                                }}>menos</p>
-                                )}
+                                <FaCaretLeft
+                                    className={`text-[32px] text-my-secondary`}
+                                    onClick={() => {
+                                        if(indPreEstampa == 0){
+                                            setIndPreEstampa(arrayEstampas.length - 1)
+                                        }else{
+                                            setIndPreEstampa(indPreEstampa - 1)
+                                        }
+                                        setImgURL(arrayEstampas[indPreEstampa])
+                                    }}
+                                />
+                            )}
                             <img src={imgURL} alt="" className={`w-[200px] h-[150px]`} />
                             {print == 'other' && (
-                                <p onClick={() => {
-                                    if(indPreEstampa == Number(arrayEstampas.length - 1)){
-                                        setIndPreEstampa(0)
-                                    }else{
-                                        setIndPreEstampa(indPreEstampa + 1)
-                                    }
-                                    setImgURL(arrayEstampas[indPreEstampa])
-                            }}>mais</p>
+                                <FaCaretRight
+                                    className={`text-[32px] text-my-secondary`}
+                                    onClick={() => {
+                                        if(indPreEstampa == Number(arrayEstampas.length - 1)){
+                                            setIndPreEstampa(0)
+                                        }else{
+                                            setIndPreEstampa(indPreEstampa + 1)
+                                        }
+                                        setImgURL(arrayEstampas[indPreEstampa])
+                                    }}
+                                />
                             )}
                         </div>
                     )}
