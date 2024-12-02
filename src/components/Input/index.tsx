@@ -12,7 +12,8 @@ interface Props {
 }
 
 //IMPORTAÇÃO DOS ICONES
-import { FaEye, FaEyeSlash, FaCode, FaAd } from "react-icons/fa"
+import { FaEye, FaEyeSlash, FaCheck } from "react-icons/fa"
+import { FaCircleXmark } from "react-icons/fa6"
 
 export default function Input(props: Props) {
 
@@ -86,7 +87,7 @@ export default function Input(props: Props) {
                     <div
                         className={`absolute right-0 mr-4 text-[24px] text-my-primary`}
                     >
-                            <FaCode />
+                            <FaCheck />
                     </div>
                 )}
                 
@@ -94,7 +95,7 @@ export default function Input(props: Props) {
                     <div
                         className={`absolute right-0 mr-4 text-[24px] text-my-red`}
                     >
-                            <FaAd className='text-my-red'/>
+                            <FaCircleXmark className='text-my-red'/>
                     </div>
                 )}
             </div>
