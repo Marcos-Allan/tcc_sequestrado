@@ -230,7 +230,7 @@ export default function Product() {
             )}
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5 max-w-[900px]`}>
-                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>tamanhos</h1>
+                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>Quantidade</h1>
                     {products && (
                         <>
                             <ChoiceQuantityCard
